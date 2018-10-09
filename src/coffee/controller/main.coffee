@@ -2,9 +2,6 @@ angular.module 'luminateControllers'
   .controller 'MainCtrl', [
     '$rootScope'
     '$scope'
-    '$location'
-    ($rootScope, $scope, $location) ->
-      console.log 'main ctrl'
-      $rootScope.$location = $location
-      $rootScope.baseUrl = $location.absUrl().split('#')[0]
+    ($rootScope, $scope) ->
+      console.log $rootScope.frId
   ]

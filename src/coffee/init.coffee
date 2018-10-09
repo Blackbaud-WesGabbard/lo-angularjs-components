@@ -1,6 +1,7 @@
 appDependencies = [
   'luminateControllers'
   'ui.bootstrap'
+  'ngLuminateUtils'
 ]
 
 angular.module 'ngLuminateLibrary', appDependencies
@@ -13,3 +14,12 @@ angular.module 'ngLuminateLibrary'
     rootPath: do ->
       rootPath = '/'
       rootPath
+
+angular.module 'ngLuminateLibrary'
+  .run [
+    '$rootScope'
+    ($rootScope) ->
+      #$dataRoot = jQuery '[data-luminate-root]'
+      #console.log $dataRoot
+      $rootScope.frId = 29300
+  ]
