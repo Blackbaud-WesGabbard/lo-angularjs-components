@@ -36,17 +36,18 @@
       return {
         getTeamRaiserData: function(frId) {
           var teamraiserData;
+          console.log(frId);
           teamraiserData = {
             teamraiser: {
-              eventDate: '[[S42:' + $rootScope.frId + ':event-date]]',
-              goal: '[[S42:' + $rootScope.frId + ':goal]]',
-              dollars: '[[S42:' + $rootScope.frId + ':dollars]]',
-              prevFrId: '[[S42:' + $rootScope.frId + ':prev-fr-id]]',
-              prevEventDate: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:event-date]]',
-              prevDollars: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:dollars]]',
-              prevTeams: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:num-teams]]',
-              prevParticipants: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:num-participants]]',
-              ageMin: '[[S47:' + $rootScope.frId + ':fr_info:1:age_minimum]]'
+              eventDate: '[[S42:' + frId + ':event-date]]',
+              goal: '[[S42:' + frId + ':goal]]',
+              dollars: '[[S42:' + frId + ':dollars]]',
+              prevFrId: '[[S42:' + frId + ':prev-fr-id]]',
+              prevEventDate: '[[E42:[[E42:' + frId + ':prev-fr-id]]:event-date]]',
+              prevDollars: '[[E42:[[E42:' + frId + ':prev-fr-id]]:dollars]]',
+              prevTeams: '[[E42:[[E42:' + frId + ':prev-fr-id]]:num-teams]]',
+              prevParticipants: '[[E42:[[E42:' + frId + ':prev-fr-id]]:num-participants]]',
+              ageMin: '[[S47:' + frId + ':fr_info:1:age_minimum]]'
             }
           };
           return $luminateTemplateTag.parse(JSON.stringify(teamraiserData)).then(function(response) {
@@ -68,10 +69,8 @@
               teamCaptain: '[[S48:' + $rootScope.frId + '-' + id + ':if-is-captain]]',
               onTeam: '[[S48:' + $rootScope.frId + '-' + id + ':if-on-team]]',
               prevParticipant: '[[E48:[[S42:' + $rootScope.frId + ':prev-fr-id]]-' + id + ':participant-id]]',
-              prevParticipantYears: '[[S48:' + $rootScope.frId + '-' + id + ':question:Please tell us how many years you have participated in ' + $rootScope.programName + '. We would like to recognize you for your commitment.]]',
               prevDollars: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:dollars]]',
               fbFundraiser: '[[?xxUser Provided No Responsexdeletedx::x[[S48:' + $rootScope.frId + '-' + id + ':question:Facebook Fundraiser ID:]]x::::[[S48:' + $rootScope.frId + '-' + id + ':question:Facebook Fundraiser ID:]]]]',
-              mobileApp: '[[S48:' + $rootScope.frId + '-' + id + ':if-in-group:' + $rootScope.mobileAppGroupId + ']]',
               sentEmail: '[[S48:' + $rootScope.frId + '-' + id + ':if-emails-gt:0]]',
               updatedPage: '[[S48:' + $rootScope.frId + '-' + id + ':if-page-updated]]'
             }
@@ -238,7 +237,9 @@
     '$rootScope', '$scope', function($rootScope, $scope) {
       console.log($rootScope.frId);
       return $scope.ctrl = {
-        hide: false
+        hide: false,
+        frId: 1070,
+        consId: 1001491
       };
     }
   ]);
@@ -249,11 +250,15 @@
         templateUrl: APP_INFO.rootPath + 'dist/html/directive/progressMeter.html',
         scope: {
           type: '@',
-          showMeterPercent: '='
+          showMeterPercent: '=',
+          id: '@',
+          frId: '@',
+          progressData: '=?'
         },
         controller: [
-          '$rootScope', '$scope', '$attrs', '$filter', 'APP_INFO', 'TeamraiserEventService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $attrs, $filter, APP_INFO, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService) {
-            var setMeter;
+          '$rootScope', '$scope', '$filter', 'APP_INFO', 'TeamraiserEventService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $filter, APP_INFO, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService) {
+            var eventId, setMeter;
+            eventId = $scope.frId ? $scope.frId : $rootScope.frId;
             $scope.meter = {
               goal: 0,
               dollars: 0,
@@ -262,58 +267,49 @@
             };
             setMeter = function(amount, goal, hide) {
               return $scope.meter = {
-                goal: goal,
                 dollars: amount,
+                goal: goal,
                 percent: amount / goal,
                 hideMeter: hide
               };
             };
-            if ($scope.type === 'individual') {
-              TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + $rootScope.frId + '&list_filter_column=reg.cons_id&list_filter_text=' + $rootScope.consId).then(function(response) {
-                var participant;
-                if (response.data.getParticipantsResponse) {
-                  participant = response.data.getParticipantsResponse.participant;
-                  return $scope.meter = {
-                    percent: String(Math.round((participant.amountRaised / participant.goal) * 100)) + '%',
-                    goal: $filter('currency')(participant.goal / 100, '$').replace('.00', ''),
-                    dollars: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
-                    dollarsFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace('.00', '')
-                  };
-                }
-              });
-            }
-            if ($scope.type === 'event') {
-              TeamraiserEventService.getTeamRaiserData().then(function(response) {
-                var rawDollars, rawGoal, rawPercent, teamraiser;
-                if (response.teamraiser) {
-                  teamraiser = response.teamraiser;
-                  $scope.meter.goal = teamraiser.goal.replace('.00', '');
-                  $scope.meter.dollars = teamraiser.dollars.replace('.00', '');
-                  rawGoal = Number($scope.meter.goal.replace(/[^\d.]/g, ''));
-                  rawDollars = Number($scope.meter.dollars.replace(/[^\d.]/g, ''));
-                  rawPercent = (rawDollars / rawGoal) * 100;
-                  $scope.meter.percent = String(Math.round((rawDollars / rawGoal) * 100)) + '%';
-                  if (rawPercent < $scope.showMeterPercent) {
-                    return $scope.meter.hideMeter = true;
+            if ($scope.progressData) {
+              return console.log($scope.progressData, 'test');
+            } else {
+              console.log('no data');
+              if ($scope.type === 'individual') {
+                TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + eventId + '&list_filter_column=reg.cons_id&list_filter_text=' + $scope.id).then(function(response) {
+                  var participant;
+                  if (response.data.getParticipantsResponse) {
+                    participant = response.data.getParticipantsResponse.participant;
+                    return $scope.meter = {
+                      percent: String(Math.round((participant.amountRaised / participant.goal) * 100)) + '%',
+                      goal: $filter('currency')(participant.goal / 100, '$').replace('.00', ''),
+                      dollars: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
+                      dollarsFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace('.00', '')
+                    };
                   }
-                }
-              });
+                });
+              }
+              if ($scope.type === 'event') {
+                console.log('is event');
+                return TeamraiserEventService.getTeamRaiserData(eventId).then(function(response) {
+                  var rawDollars, rawGoal, rawPercent, teamraiser;
+                  if (response.teamraiser) {
+                    teamraiser = response.teamraiser;
+                    $scope.meter.goal = teamraiser.goal.replace('.00', '');
+                    $scope.meter.dollars = teamraiser.dollars.replace('.00', '');
+                    rawGoal = Number($scope.meter.goal.replace(/[^\d.]/g, ''));
+                    rawDollars = Number($scope.meter.dollars.replace(/[^\d.]/g, ''));
+                    rawPercent = (rawDollars / rawGoal) * 100;
+                    $scope.meter.percent = String(Math.round((rawDollars / rawGoal) * 100)) + '%';
+                    if (rawPercent < $scope.showMeterPercent) {
+                      return $scope.meter.hideMeter = true;
+                    }
+                  }
+                });
+              }
             }
-            return $scope.refreshFundraisingProgress = function() {
-              return TeamraiserParticipantService.getParticipantProgress('fr_id=' + $rootScope.frId).then(function(response) {
-                var participantProgress, ref, ref1, ref2, ref3, teamProgress;
-                participantProgress = response.data.getParticipantProgressResponse.personalProgress;
-                if ((((ref = $scope.participantRegistration) != null ? ref.teamId : void 0) && ((ref1 = $scope.participantRegistration) != null ? ref1.teamId : void 0) !== '-1') || ((ref2 = $rootScope.dashboard) != null ? (ref3 = ref2.registration) != null ? ref3.teamId : void 0 : void 0)) {
-                  teamProgress = response.data.getParticipantProgressResponse.teamProgress;
-                }
-                $scope.meter.goal = $scope.type === 'team' ? $filter('currency')(Number(teamProgress.goal) / 100, '$').replace('.00', '') : $filter('currency')(Number(participantProgress.goal) / 100, '$').replace('.00', '');
-                $scope.meter.percent = $scope.type === 'team' ? teamProgress.percent + '%' : participantProgress.percent + '%';
-                if (!$scope.$$phase) {
-                  $scope.$apply();
-                }
-                return response;
-              });
-            };
           }
         ]
       };

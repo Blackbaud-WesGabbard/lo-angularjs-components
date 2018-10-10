@@ -7,16 +7,19 @@ angular.module 'luminateControllers'
       scope:
         type: '@'
         showMeterPercent: '='
+        id: '@'
+        frId: '@'
+        progressData: '=?'
       controller: [
         '$rootScope'
         '$scope'
-        '$attrs'
         '$filter'
         'APP_INFO'
         'TeamraiserEventService'
         'TeamraiserParticipantService'
         'TeamraiserTeamService'
-        ($rootScope, $scope, $attrs, $filter, APP_INFO, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService) ->
+        ($rootScope, $scope, $filter, APP_INFO, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService) ->
+          eventId = if $scope.frId then $scope.frId else $rootScope.frId
           $scope.meter =
             goal: 0
             dollars: 0
@@ -25,56 +28,42 @@ angular.module 'luminateControllers'
 
           setMeter = (amount, goal, hide) ->
             $scope.meter =
-              goal: goal
               dollars: amount
+              goal: goal
               percent: amount / goal
               hideMeter: hide
 
-          if $scope.type is 'individual'
-            TeamraiserParticipantService.getParticipants '&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + $rootScope.frId + '&list_filter_column=reg.cons_id&list_filter_text=' + $rootScope.consId
-              .then (response) ->
-                if response.data.getParticipantsResponse
-                  participant = response.data.getParticipantsResponse.participant
-                  $scope.meter =
-                    percent: String(Math.round (participant.amountRaised / participant.goal) * 100) + '%'
-                    goal: $filter('currency')(participant.goal / 100, '$').replace '.00', ''
-                    dollars: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace '.00', ''
-                    dollarsFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace '.00', ''
+          if $scope.progressData
+            console.log $scope.progressData, 'test'
 
-          if $scope.type is 'event'
-            TeamraiserEventService.getTeamRaiserData()
-              .then (response) ->
-                if response.teamraiser
-                  teamraiser = response.teamraiser
-                  $scope.meter.goal = teamraiser.goal.replace '.00', ''
-                  $scope.meter.dollars = teamraiser.dollars.replace '.00', ''
+          else
+            console.log 'no data'
+            if $scope.type is 'individual'
+              TeamraiserParticipantService.getParticipants '&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + eventId + '&list_filter_column=reg.cons_id&list_filter_text=' + $scope.id
+                .then (response) ->
+                  if response.data.getParticipantsResponse
+                    participant = response.data.getParticipantsResponse.participant
+                    $scope.meter =
+                      percent: String(Math.round (participant.amountRaised / participant.goal) * 100) + '%'
+                      goal: $filter('currency')(participant.goal / 100, '$').replace '.00', ''
+                      dollars: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace '.00', ''
+                      dollarsFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace '.00', ''
 
-                  rawGoal = Number $scope.meter.goal.replace(/[^\d.]/g,'')
-                  rawDollars = Number $scope.meter.dollars.replace(/[^\d.]/g,'')
-                  rawPercent = (rawDollars / rawGoal) * 100
-                  $scope.meter.percent = String(Math.round (rawDollars / rawGoal) * 100) + '%'
-                  if rawPercent < $scope.showMeterPercent
-                    $scope.meter.hideMeter = true
+            if $scope.type is 'event'
+              console.log 'is event'
+              TeamraiserEventService.getTeamRaiserData eventId
+                .then (response) ->
+                  if response.teamraiser
+                    teamraiser = response.teamraiser
+                    $scope.meter.goal = teamraiser.goal.replace '.00', ''
+                    $scope.meter.dollars = teamraiser.dollars.replace '.00', ''
 
-
-
-          $scope.refreshFundraisingProgress = ->
-            TeamraiserParticipantService.getParticipantProgress 'fr_id=' + $rootScope.frId
-              .then (response) ->
-                participantProgress = response.data.getParticipantProgressResponse.personalProgress
-                if ($scope.participantRegistration?.teamId and $scope.participantRegistration?.teamId isnt '-1') or $rootScope.dashboard?.registration?.teamId
-                  teamProgress = response.data.getParticipantProgressResponse.teamProgress
-                $scope.meter.goal = if $scope.type is 'team' then $filter('currency')(Number(teamProgress.goal) / 100, '$').replace '.00', '' else $filter('currency')(Number(participantProgress.goal) / 100, '$').replace '.00', ''
-                $scope.meter.percent = if $scope.type is 'team' then teamProgress.percent + '%' else participantProgress.percent + '%'
-                if not $scope.$$phase
-                  $scope.$apply()
-                response
-
-
-
-
-
-
+                    rawGoal = Number $scope.meter.goal.replace(/[^\d.]/g,'')
+                    rawDollars = Number $scope.meter.dollars.replace(/[^\d.]/g,'')
+                    rawPercent = (rawDollars / rawGoal) * 100
+                    $scope.meter.percent = String(Math.round (rawDollars / rawGoal) * 100) + '%'
+                    if rawPercent < $scope.showMeterPercent
+                      $scope.meter.hideMeter = true
 
 
       ]

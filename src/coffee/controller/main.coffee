@@ -6,4 +6,6 @@ angular.module 'luminateControllers'
       console.log $rootScope.frId
       $scope.ctrl =
         hide: false
+        frId: 1070
+        consId: 1001491
   ]

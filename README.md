@@ -30,4 +30,4 @@ Local web server:
 grunt dev
 ```
 
-Avaliable at [http://localhost:8000/index.html](http://localhost:8000/index.html)
+Guide available at [http://localhost:8000/index.html](http://localhost:8000/index.html)

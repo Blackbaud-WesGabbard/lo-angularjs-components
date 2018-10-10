@@ -12,12 +12,66 @@
 <body id="data-root" data-luminate-root data-fr-id="1070" data-api-key="wDB09SQODRpVIOvX" data-table-prefix="psdemo" data-domain="http://psdemo.convio.net/site/" data-secure-domain="https://secure2.convio.net/psdemo/site/">
   <div class="container" ng-controller="MainCtrl">
     <h1>Luminate Online AngularJS Component Library</h1>
+    <h2>Progress Meters</h2>
     <div class="card">
       <div class="card-body">
-        <h2 class="card-title">Progress Meters</h2>
-        <div progress-meter type="event" show-meter-percent="5"></div>
+        <h3>Properties</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Attribute</th>
+              <th scope="col">Format</th>
+              <th scope="col">Required</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>type</td>
+              <td>String</td>
+              <td>Required</td>
+              <td>Type of meter. Can be set as either Event, Individual, or Team</td>
+            </tr>
+            <tr>
+              <td>frId</td>
+              <td>String or Object</td>
+              <td>Optional if embedded in TeamRaiser, otherwise required.</td>
+              <td>The frId or TeamRaiser id.</td>
+            </tr>
+            <tr>
+              <td>id</td>
+              <td>String or Object</td>
+              <td>Required for Individual or Team. </td>
+              <td>Pass Constituent ID for Individual, or Team ID for Team. Can be passed as string or as an object.</td>
+            </tr>
+            <tr>
+              <td>data</td>
+              <td>Object</td>
+              <td>Optional</td>
+              <td>Can pass the meter data as object if data already present. Must pass amount and goal</td>
+            </tr>
+            <tr>
+              <td>showMeterPercent</td>
+              <td>String</td>
+              <td>Optional</td>
+              <td>Can set the minimum percent of the meter before it will show</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+    <h3>Example</h3>
+    <h4>Event</h4>
+    <code>
+      &lt;div progress-meter type="event" show-meter-percent="5" fr-id="1070"&gt;&lt;/div&gt;
+    </code>
+    <div progress-meter type="event" show-meter-percent="5" fr-id="1070"></div>
+    <hr />
+    <h4>Individual</h4>
+    <code>
+      &lt;div progress-meter type="individual" id="{{ctrl.consId}}"&gt;&lt;/div&gt;
+    </code>
+    <div progress-meter type="individual" progress-data="{ amount: 500, goal: 1000 }"></div>
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
   <script src="vendor/ui-bootstrap-tpls-3.0.3.min.js"></script>
