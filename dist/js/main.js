@@ -1,7 +1,7 @@
 (function() {
   var appDependencies;
 
-  appDependencies = ['luminateControllers', 'ui.bootstrap', 'ngLuminateUtils'];
+  appDependencies = ['ui.bootstrap', 'ngLuminateUtils', 'luminateControllers'];
 
   angular.module('ngLuminateLibrary', appDependencies);
 
@@ -18,14 +18,23 @@
 
   angular.module('ngLuminateLibrary').run([
     '$rootScope', function($rootScope) {
-      return $rootScope.frId = 29300;
+      return $rootScope.frId = 1070;
+    }
+  ]);
+
+  angular.module('ngLuminateLibrary').config([
+    '$luminateUtilsConfigProvider', function($luminateUtilsConfigProvider) {
+      $luminateUtilsConfigProvider.setPath({
+        nonsecure: 'http://psdemo.convio.net/site/',
+        secure: 'https://secure2.convio.net/psdemo/site/'
+      }).setKey('wDB09SQODRpVIOvX');
     }
   ]);
 
   angular.module('ngLuminateLibrary').factory('TeamraiserDataService', [
     '$rootScope', '$luminateTemplateTag', function($rootScope, $luminateTemplateTag) {
       return {
-        getTeamRaiserData: function() {
+        getTeamRaiserData: function(frId) {
           var teamraiserData;
           teamraiserData = {
             teamraiser: {
@@ -225,26 +234,33 @@
     }
   ]);
 
+  angular.module('luminateControllers').controller('MainCtrl', [
+    '$rootScope', '$scope', function($rootScope, $scope) {
+      console.log($rootScope.frId);
+      return $scope.ctrl = {
+        hide: false
+      };
+    }
+  ]);
+
   angular.module('luminateControllers').directive('progressMeter', [
     'APP_INFO', '$rootScope', function(APP_INFO, $rootScope) {
       return {
         templateUrl: APP_INFO.rootPath + 'dist/html/directive/progressMeter.html',
+        scope: {
+          type: '@',
+          hideMeter: '='
+        },
         controller: [
-          '$rootScope', '$scope', '$attrs', 'APP_INFO', 'TeamraiserDataService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $attrs, $uibModal, $filter, APP_INFO, TeamraiserDataService, TeamraiserParticipantService, TeamraiserTeamService) {
-            $scope.type = $attrs.type;
+          '$rootScope', '$scope', '$attrs', '$filter', 'APP_INFO', 'TeamraiserDataService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $attrs, $filter, APP_INFO, TeamraiserDataService, TeamraiserParticipantService, TeamraiserTeamService) {
             $scope.attrs = $attrs;
             $scope.location = $attrs.location ? $scope.$eval($attrs.location) : null;
+            console.log($scope);
             $scope.meter = {
-              isLoading: true,
               goal: 0,
               dollars: 0,
-              dollarsFormatted: 0,
-              message: null,
-              prevYear: '',
-              prevDollars: 0,
-              prevTeams: 0,
-              prevParticipants: 0,
-              hideTherm: false
+              percent: 0,
+              hideMeter: null
             };
             if ($attrs.raised && $attrs.goal && $attrs.percent) {
               $scope.meter = {
@@ -261,7 +277,7 @@
                 hideTherm: $scope.$eval($attrs.hideTherm) === '0' ? true : false
               };
             } else {
-              if ($attrs.type === 'individual') {
+              if ($scope.type === 'individual') {
                 TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + $rootScope.frId + '&list_filter_column=reg.cons_id&list_filter_text=' + $rootScope.consId).then(function(response) {
                   var participant;
                   if (response.data.getParticipantsResponse) {
@@ -275,15 +291,14 @@
                   }
                 });
               }
-              if ($attrs.type === 'event') {
+              if ($scope.type === 'event') {
                 TeamraiserDataService.getTeamRaiserData().then(function(response) {
                   var rawDollars, rawGoal, rawPercent, teamraiser;
                   if (response.teamraiser) {
                     teamraiser = response.teamraiser;
-                    $scope.meter.goal = teamraiser.goal;
-                    $scope.meter.dollars = teamraiser.dollars;
-                    $scope.meter.dollarsFormatted = teamraiser.dollars;
-                    $scope.meter.prevDollars = teamraiser.prevDollars;
+                    $scope.meter.goal = teamraiser.goal.replace('.00', '');
+                    $scope.meter.dollars = teamraiser.dollars.replace('.00', '');
+                    $scope.meter.prevDollars = teamraiser.prevDollars.replace('.00', '');
                     $scope.meter.prevParticipants = teamraiser.prevParticipants;
                     $scope.meter.prevTeams = teamraiser.prevTeams;
                     if (teamraiser.prevEventDate !== '') {
@@ -291,19 +306,13 @@
                     }
                     rawGoal = Number($scope.meter.goal.replace(/[^\d.]/g, ''));
                     rawDollars = Number($scope.meter.dollars.replace(/[^\d.]/g, ''));
-                    if (rawGoal > 0 && rawDollars > 0) {
-                      rawPercent = (rawDollars / rawGoal) * 100;
-                      $scope.meter.percent = String(Math.round((rawDollars / rawGoal) * 100)) + '%';
-                      if (rawPercent < 25 && teamraiser.prevFrId !== 'Unrecognized type parameter') {
-                        $scope.meter.showPrevYear = true;
-                      }
-                    } else {
-                      if (teamraiser.prevFrId !== 'Unrecognized type parameter') {
-                        $scope.meter.showPrevYear = true;
-                      }
+                    rawPercent = (rawDollars / rawGoal) * 100;
+                    $scope.meter.percent = String(Math.round((rawDollars / rawGoal) * 100)) + '%';
+                    if (rawPercent < $scope.hideMeter) {
+                      $scope.meter.hideMeter = true;
                     }
+                    return console.log($scope.meter);
                   }
-                  return delete $scope.meter.isLoading;
                 });
               }
             }
@@ -325,12 +334,6 @@
           }
         ]
       };
-    }
-  ]);
-
-  angular.module('luminateControllers').controller('MainCtrl', [
-    '$rootScope', '$scope', function($rootScope, $scope) {
-      return console.log($rootScope.frId);
     }
   ]);
 

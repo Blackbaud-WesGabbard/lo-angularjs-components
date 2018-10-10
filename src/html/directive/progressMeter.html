@@ -1,4 +1,5 @@
-<div ng-cloak class="lo-progress-meter" ng-class="lo-progress-meters--{{type}}" >
+<div ng-cloak class="lo-progress-meter lo-progress-meters--{{type}}" ng-if="!hideMeter">
+  {{meter}}
   <div class="row">
     <div class="lo-progress-meter__meter col" ng-if="!meter.hideMeter">
       <div class="lo-progress-meter__meter--empty" ng-if="!meter.hideTherm">
@@ -7,20 +8,20 @@
     </div>
   </div>
   <div class="row">
-    <div class="lo-progress-meter__data col-4" ng-if="meter.dollarsFormatted">
-      <p class="h2" ng-bind-hmtl="meter.dollarsFormatted"></p>
+    <div class="lo-progress-meter__data col-4" ng-if="meter.dollars">
+      <p class="h2" ng-bind="meter.dollars"></p>
       <div class="small">
         raised
       </div>
     </div>
-    <div class="lo-progress-meter__data col-4" ng-if="meter.dollarsFormatted">
-      <p class="h2" ng-bind-hmtl="meter.percent"></p>
+    <div class="lo-progress-meter__data col-4" ng-if="meter.percent">
+      <p class="h2" ng-bind="meter.percent"></p>
       <div class="small">
         of goal
       </div>
     </div>
-    <div class="lo-progress-meter__data col-4" ng-if="meter.dollarsFormatted">
-      <p class="h2" ng-bind-hmtl="meter.goal"></p>
+    <div class="lo-progress-meter__data col-4" ng-if="meter.goal">
+      <p class="h2" ng-bind="meter.goal"></p>
       <div class="small">
         goal
       </div>

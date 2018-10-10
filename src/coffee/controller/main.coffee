@@ -4,4 +4,6 @@ angular.module 'luminateControllers'
     '$scope'
     ($rootScope, $scope) ->
       console.log $rootScope.frId
+      $scope.ctrl =
+        hide: false
   ]

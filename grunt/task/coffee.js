@@ -11,6 +11,7 @@ module.exports = {
         'src/coffee/init.coffee',
         'src/coffee/config/*.*',
         'src/coffee/service/*.*',
+        'src/coffee/controller/*.*',
         'src/coffee/filter/*.*',
         'src/coffee/directive/*.*',
         'src/coffee/**/*.*'

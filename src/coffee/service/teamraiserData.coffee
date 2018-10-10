@@ -3,7 +3,7 @@ angular.module 'ngLuminateLibrary'
     '$rootScope'
     '$luminateTemplateTag'
     ($rootScope, $luminateTemplateTag) ->
-      getTeamRaiserData: ->
+      getTeamRaiserData: (frId) ->
         teamraiserData =
           teamraiser:
             eventDate: '[[S42:' + $rootScope.frId + ':event-date]]'
@@ -15,7 +15,6 @@ angular.module 'ngLuminateLibrary'
             prevTeams: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:num-teams]]'
             prevParticipants: '[[E42:[[E42:' + $rootScope.frId + ':prev-fr-id]]:num-participants]]'
             ageMin: '[[S47:' + $rootScope.frId + ':fr_info:1:age_minimum]]'
-
         $luminateTemplateTag.parse JSON.stringify(teamraiserData)
           .then (response) ->
             return JSON.parse(response)
