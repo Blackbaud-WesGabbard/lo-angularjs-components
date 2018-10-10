@@ -7,13 +7,5 @@ module.exports = {
         'src/sass/main.scss'
       ]
     }
-  },
-
-  "participant": {
-    files: {
-      'dist/css/participant.css': [
-        'src/sass/participant.scss'
-      ]
-    }
   }
 }

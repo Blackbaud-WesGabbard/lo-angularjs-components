@@ -31,7 +31,7 @@
     }
   ]);
 
-  angular.module('ngLuminateLibrary').factory('TeamraiserDataService', [
+  angular.module('ngLuminateLibrary').factory('TeamraiserEventService', [
     '$rootScope', '$luminateTemplateTag', function($rootScope, $luminateTemplateTag) {
       return {
         getTeamRaiserData: function(frId) {
@@ -249,72 +249,55 @@
         templateUrl: APP_INFO.rootPath + 'dist/html/directive/progressMeter.html',
         scope: {
           type: '@',
-          hideMeter: '='
+          showMeterPercent: '='
         },
         controller: [
-          '$rootScope', '$scope', '$attrs', '$filter', 'APP_INFO', 'TeamraiserDataService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $attrs, $filter, APP_INFO, TeamraiserDataService, TeamraiserParticipantService, TeamraiserTeamService) {
-            $scope.attrs = $attrs;
-            $scope.location = $attrs.location ? $scope.$eval($attrs.location) : null;
-            console.log($scope);
+          '$rootScope', '$scope', '$attrs', '$filter', 'APP_INFO', 'TeamraiserEventService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $attrs, $filter, APP_INFO, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService) {
+            var setMeter;
             $scope.meter = {
               goal: 0,
               dollars: 0,
               percent: 0,
               hideMeter: null
             };
-            if ($attrs.raised && $attrs.goal && $attrs.percent) {
-              $scope.meter = {
-                goal: $filter('currency')(Number($scope.$eval($attrs.goal)) / 100, '$').replace('.00', ''),
-                dollars: $filter('currency')(Number($scope.$eval($attrs.raised)) / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
-                dollarsFormatted: $filter('currency')(Number($scope.$eval($attrs.raised)) / 100, '$').replace('.00', ''),
-                percent: $scope.$eval($attrs.percent) + '%',
-                rank: $scope.$eval($attrs.rank),
-                total: $scope.$eval($attrs.total),
-                daysLeft: $scope.$eval($attrs.daysLeft),
-                teamMembers: $scope.$eval($attrs.teamMembers),
-                teamCount: $scope.$eval($attrs.teamCount),
-                participantCount: $scope.$eval($attrs.participantCount),
-                hideTherm: $scope.$eval($attrs.hideTherm) === '0' ? true : false
+            setMeter = function(amount, goal, hide) {
+              return $scope.meter = {
+                goal: goal,
+                dollars: amount,
+                percent: amount / goal,
+                hideMeter: hide
               };
-            } else {
-              if ($scope.type === 'individual') {
-                TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + $rootScope.frId + '&list_filter_column=reg.cons_id&list_filter_text=' + $rootScope.consId).then(function(response) {
-                  var participant;
-                  if (response.data.getParticipantsResponse) {
-                    participant = response.data.getParticipantsResponse.participant;
-                    return $scope.meter = {
-                      percent: String(Math.round((participant.amountRaised / participant.goal) * 100)) + '%',
-                      goal: $filter('currency')(participant.goal / 100, '$').replace('.00', ''),
-                      dollars: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
-                      dollarsFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace('.00', '')
-                    };
+            };
+            if ($scope.type === 'individual') {
+              TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + $rootScope.frId + '&list_filter_column=reg.cons_id&list_filter_text=' + $rootScope.consId).then(function(response) {
+                var participant;
+                if (response.data.getParticipantsResponse) {
+                  participant = response.data.getParticipantsResponse.participant;
+                  return $scope.meter = {
+                    percent: String(Math.round((participant.amountRaised / participant.goal) * 100)) + '%',
+                    goal: $filter('currency')(participant.goal / 100, '$').replace('.00', ''),
+                    dollars: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
+                    dollarsFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace('.00', '')
+                  };
+                }
+              });
+            }
+            if ($scope.type === 'event') {
+              TeamraiserEventService.getTeamRaiserData().then(function(response) {
+                var rawDollars, rawGoal, rawPercent, teamraiser;
+                if (response.teamraiser) {
+                  teamraiser = response.teamraiser;
+                  $scope.meter.goal = teamraiser.goal.replace('.00', '');
+                  $scope.meter.dollars = teamraiser.dollars.replace('.00', '');
+                  rawGoal = Number($scope.meter.goal.replace(/[^\d.]/g, ''));
+                  rawDollars = Number($scope.meter.dollars.replace(/[^\d.]/g, ''));
+                  rawPercent = (rawDollars / rawGoal) * 100;
+                  $scope.meter.percent = String(Math.round((rawDollars / rawGoal) * 100)) + '%';
+                  if (rawPercent < $scope.showMeterPercent) {
+                    return $scope.meter.hideMeter = true;
                   }
-                });
-              }
-              if ($scope.type === 'event') {
-                TeamraiserDataService.getTeamRaiserData().then(function(response) {
-                  var rawDollars, rawGoal, rawPercent, teamraiser;
-                  if (response.teamraiser) {
-                    teamraiser = response.teamraiser;
-                    $scope.meter.goal = teamraiser.goal.replace('.00', '');
-                    $scope.meter.dollars = teamraiser.dollars.replace('.00', '');
-                    $scope.meter.prevDollars = teamraiser.prevDollars.replace('.00', '');
-                    $scope.meter.prevParticipants = teamraiser.prevParticipants;
-                    $scope.meter.prevTeams = teamraiser.prevTeams;
-                    if (teamraiser.prevEventDate !== '') {
-                      $scope.meter.prevYear = teamraiser.prevEventDate.split('/')[2];
-                    }
-                    rawGoal = Number($scope.meter.goal.replace(/[^\d.]/g, ''));
-                    rawDollars = Number($scope.meter.dollars.replace(/[^\d.]/g, ''));
-                    rawPercent = (rawDollars / rawGoal) * 100;
-                    $scope.meter.percent = String(Math.round((rawDollars / rawGoal) * 100)) + '%';
-                    if (rawPercent < $scope.hideMeter) {
-                      $scope.meter.hideMeter = true;
-                    }
-                    return console.log($scope.meter);
-                  }
-                });
-              }
+                }
+              });
             }
             return $scope.refreshFundraisingProgress = function() {
               return TeamraiserParticipantService.getParticipantProgress('fr_id=' + $rootScope.frId).then(function(response) {

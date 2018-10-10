@@ -1,5 +1,5 @@
 angular.module 'ngLuminateLibrary'
-  .factory 'TeamraiserDataService', [
+  .factory 'TeamraiserEventService', [
     '$rootScope'
     '$luminateTemplateTag'
     ($rootScope, $luminateTemplateTag) ->

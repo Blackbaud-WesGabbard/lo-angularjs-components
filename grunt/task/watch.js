@@ -19,6 +19,7 @@ module.exports = {
     files: [
       'src/html/**/*',
       'src/sass/**/*',
+      'src/sass/main.scss',
       'src/coffee/**/*'
     ],
     tasks: [
