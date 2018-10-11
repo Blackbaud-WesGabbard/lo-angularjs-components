@@ -1,10 +1,8 @@
 angular.module 'ngLuminateLibrary'
   .factory 'TeamraiserEventService', [
-    '$rootScope'
     '$luminateTemplateTag'
-    ($rootScope, $luminateTemplateTag) ->
+    ($luminateTemplateTag) ->
       getTeamRaiserData: (frId) ->
-        console.log frId
         teamraiserData =
           teamraiser:
             eventDate: '[[S42:' + frId + ':event-date]]'

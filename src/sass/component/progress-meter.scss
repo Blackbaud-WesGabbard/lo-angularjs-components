@@ -2,9 +2,13 @@
   height: 2.5rem;
   background: $light;
   margin-bottom: $spacer;
+  border: 1px solid $gray-300;
+  border-radius: 0;
 
   .lo-progress-meter__meter--full {
     background: $primary;
+    border-color: transparent;
+    margin: 0;
   }
 }
 

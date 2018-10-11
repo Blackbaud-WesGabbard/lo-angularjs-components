@@ -1,11 +1,13 @@
 angular.module 'luminateControllers'
   .controller 'MainCtrl', [
-    '$rootScope'
     '$scope'
-    ($rootScope, $scope) ->
-      console.log $rootScope.frId
+    ($scope) ->
       $scope.ctrl =
         hide: false
         frId: 1070
         consId: 1001491
+        teamId: 1057
+        companyId: 1013
+        amount: 56500
+        goal: 140000
   ]

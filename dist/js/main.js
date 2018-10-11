@@ -31,12 +31,29 @@
     }
   ]);
 
+  angular.module('ngLuminateLibrary').factory('TeamraiserCompanyService', [
+    '$luminateRest', function($luminateRest) {
+      return {
+        getCompanies: function(requestData) {
+          var dataString;
+          dataString = 'method=getCompaniesByInfo';
+          if (requestData && requestData !== '') {
+            dataString += '&' + requestData;
+          }
+          return $luminateRest.request({
+            api: 'teamraiser',
+            data: dataString
+          });
+        }
+      };
+    }
+  ]);
+
   angular.module('ngLuminateLibrary').factory('TeamraiserEventService', [
-    '$rootScope', '$luminateTemplateTag', function($rootScope, $luminateTemplateTag) {
+    '$luminateTemplateTag', function($luminateTemplateTag) {
       return {
         getTeamRaiserData: function(frId) {
           var teamraiserData;
-          console.log(frId);
           teamraiserData = {
             teamraiser: {
               eventDate: '[[S42:' + frId + ':event-date]]',
@@ -234,12 +251,45 @@
   ]);
 
   angular.module('luminateControllers').controller('MainCtrl', [
-    '$rootScope', '$scope', function($rootScope, $scope) {
-      console.log($rootScope.frId);
+    '$scope', function($scope) {
       return $scope.ctrl = {
         hide: false,
         frId: 1070,
-        consId: 1001491
+        consId: 1001491,
+        teamId: 1057,
+        companyId: 1013,
+        amount: 56500,
+        goal: 140000
+      };
+    }
+  ]);
+
+  angular.module('luminateControllers').directive('progressMeter', [
+    'APP_INFO', '$rootScope', function(APP_INFO, $rootScope) {
+      return {
+        templateUrl: APP_INFO.rootPath + 'dist/html/directive/participationTypes.html',
+        scope: {
+          type: '@',
+          showMeterPercent: '@',
+          id: '=?',
+          frId: '=?',
+          progressData: '=?'
+        },
+        controller: [
+          '$rootScope', '$scope', 'TeamraiserRegistrationService', function($rootScope, $scope, TeamraiserRegistrationService) {
+            $scope.participationTypes = [];
+            return TeamraiserRegistrationService.getParticipationTypes().then(function(response) {
+              if (response.data.getParticipationTypesResponse) {
+                $scope.participationTypes = response.data.getParticipationTypesResponse.participationType;
+                return angular.forEach($scope.participationTypes, function(type) {
+                  var formatStr;
+                  formatStr = type.description.replace(/(\r\n\t|\n|\r\t)/gm, "").trim();
+                  return type.description = formatStr.replace(/\|/g, '<br />');
+                });
+              }
+            });
+          }
+        ]
       };
     }
   ]);
@@ -250,13 +300,13 @@
         templateUrl: APP_INFO.rootPath + 'dist/html/directive/progressMeter.html',
         scope: {
           type: '@',
-          showMeterPercent: '=',
-          id: '@',
-          frId: '@',
+          showMeterPercent: '@',
+          id: '=?',
+          frId: '=?',
           progressData: '=?'
         },
         controller: [
-          '$rootScope', '$scope', '$filter', 'APP_INFO', 'TeamraiserEventService', 'TeamraiserParticipantService', 'TeamraiserTeamService', function($rootScope, $scope, $filter, APP_INFO, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService) {
+          '$rootScope', '$scope', '$filter', 'TeamraiserEventService', 'TeamraiserParticipantService', 'TeamraiserTeamService', 'TeamraiserCompanyService', function($rootScope, $scope, $filter, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService, TeamraiserCompanyService) {
             var eventId, hideMeter, percent, setMeter;
             eventId = $scope.frId ? $scope.frId : $rootScope.frId;
             $scope.meter = {
@@ -265,12 +315,14 @@
               percent: 0,
               hideMeter: null
             };
-            setMeter = function(amount, goal, hide) {
+            setMeter = function(amount, goal) {
+              var percent;
+              percent = (amount / goal) * 100;
               return $scope.meter = {
                 dollars: $filter('currency')(amount / 100, '$').replace('.00', ''),
                 goal: $filter('currency')(goal / 100, '$').replace('.00', ''),
-                percent: String(Math.round((amount / goal) * 100)) + '%',
-                hideMeter: hide
+                percent: String(Math.round(percent)) + '%',
+                hideMeter: percent < $scope.showMeterPercent || percent === Infinity || percent === NaN ? true : null
               };
             };
             if ($scope.progressData) {
@@ -278,29 +330,41 @@
               hideMeter = percent < $scope.showMeterPercent ? true : null;
               return setMeter($scope.progressData.amount, $scope.progressData.goal, hideMeter);
             } else {
-              if ($scope.type === 'individual') {
-                TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + eventId + '&list_filter_column=reg.cons_id&list_filter_text=' + $scope.id).then(function(response) {
-                  var dollars, goal, participant;
-                  if (response.data.getParticipantsResponse) {
-                    participant = response.data.getParticipantsResponse.participant;
-                    dollars = Number(participant.amountRaised);
-                    goal = Number(participant.goal);
-                    percent = dollars / goal;
-                    hideMeter = percent < $scope.showMeterPercent ? true : null;
-                    return setMeter(dollars, goal, hideMeter);
-                  }
-                });
-              }
               if ($scope.type === 'event') {
-                return TeamraiserEventService.getTeamRaiserData(eventId).then(function(response) {
+                TeamraiserEventService.getTeamRaiserData(eventId).then(function(response) {
                   var dollars, goal, teamraiser;
                   if (response.teamraiser) {
                     teamraiser = response.teamraiser;
                     dollars = Number(teamraiser.dollars.replace(/[^\d.]/g, ''));
                     goal = Number(teamraiser.goal.replace(/[^\d.]/g, ''));
-                    percent = (dollars / goal) * 100;
-                    hideMeter = percent < $scope.showMeterPercent ? true : null;
-                    return setMeter(dollars * 100, goal * 100, hideMeter);
+                    return setMeter(dollars * 100, goal * 100);
+                  }
+                });
+              }
+              if ($scope.type === 'individual') {
+                TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_page_size=1&fr_id=' + eventId + '&list_filter_column=reg.cons_id&list_filter_text=' + $scope.id).then(function(response) {
+                  var participant;
+                  if (response.data.getParticipantsResponse) {
+                    participant = response.data.getParticipantsResponse.participant;
+                    return setMeter(Number(participant.amountRaised), Number(participant.goal));
+                  }
+                });
+              }
+              if ($scope.type === 'team') {
+                TeamraiserTeamService.getTeams('team_id=' + $scope.id + '&fr_id=' + eventId).then(function(response) {
+                  var team;
+                  if (response.data.getTeamSearchByInfoResponse) {
+                    team = response.data.getTeamSearchByInfoResponse.team;
+                    return setMeter(Number(team.amountRaised), Number(team.goal));
+                  }
+                });
+              }
+              if ($scope.type === 'company') {
+                return TeamraiserCompanyService.getCompanies('company_id=' + $scope.id + '&fr_id=' + eventId).then(function(response) {
+                  var company;
+                  if (response.data.getCompaniesResponse) {
+                    company = response.data.getCompaniesResponse.company;
+                    return setMeter(company.amountRaised, company.goal);
                   }
                 });
               }

@@ -11,68 +11,110 @@
 </head>
 <body id="data-root" data-luminate-root data-fr-id="1070" data-api-key="wDB09SQODRpVIOvX" data-table-prefix="psdemo" data-domain="http://psdemo.convio.net/site/" data-secure-domain="https://secure2.convio.net/psdemo/site/">
   <div class="container" ng-controller="MainCtrl">
-    <h1>Luminate Online AngularJS Component Library</h1>
-    <h2>Progress Meters</h2>
-    <div class="card">
-      <div class="card-body">
-        <h3>Properties</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Attribute</th>
-              <th scope="col">Format</th>
-              <th scope="col">Required</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>type</td>
-              <td>String</td>
-              <td>Required</td>
-              <td>Type of meter. Can be set as either Event, Individual, or Team</td>
-            </tr>
-            <tr>
-              <td>frId</td>
-              <td>String or Object</td>
-              <td>Optional if embedded in TeamRaiser, otherwise required.</td>
-              <td>The frId or TeamRaiser id.</td>
-            </tr>
-            <tr>
-              <td>id</td>
-              <td>String or Object</td>
-              <td>Required for Individual or Team. </td>
-              <td>Pass Constituent ID for Individual, or Team ID for Team. Can be passed as string or as an object.</td>
-            </tr>
-            <tr>
-              <td>data</td>
-              <td>Object</td>
-              <td>Optional</td>
-              <td>Can pass the meter data as object if data already present. Must pass amount and goal</td>
-            </tr>
-            <tr>
-              <td>showMeterPercent</td>
-              <td>String</td>
-              <td>Optional</td>
-              <td>Can set the minimum percent of the meter before it will show</td>
-            </tr>
-          </tbody>
-        </table>
+    <nav class="navbar navbar-light bg-primary navbar-fixed-left">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#progress-meters">
+              Progress Meters
+            </a>
+          </li>
+          <li>
+            <a href="#participation-types">
+              Participation Types
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container--fixed">
+      <h1>
+        Luminate Online AngularJS Component Library
+      </h1>
+      <p>
+        A componenet library with common parts to build AngularJS apps in Luminate Online. Built with AngularJS v 1.6, Bootstrap 4 and SASS.
+      </p>
+      <div class="card" id="progress-meters">
+        <div class="card-body">
+          <h2>Progress Meters</h2>
+          <p>Progress meters can be set for TeamRaiser events, TeamRaiser participants, TeamRaiser teams or TeamRaiser local companies. The frId attribute must be set if using outside of a TeamRaiser. For the meter to show up, a goal must be set. For example, if setting a company meter and no goal is set on hte local company it will not show.
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Attribute</th>
+                <th scope="col">Format</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>type</td>
+                <td>String</td>
+                <td>Required, can be set as Event, Individual, Team or Company.</td>
+              </tr>
+              <tr>
+                <td>frId</td>
+                <td>String or Object</td>
+                <td>TeamRaiser id is optional if embedded in TeamRaiser, otherwise required.</td>
+              </tr>
+              <tr>
+                <td>progressData</td>
+                <td>Object</td>
+                <td>Pass the progressData as an object instead of id if data already present. Must pass amount and goal properties. This is preffered method when data aleady in scope to prevent redundant API calls.</td>
+              </tr>
+              <tr>
+                <td>id</td>
+                <td>String or Object</td>
+                <td>If not passing progressData object, then must id attribute. Pass Constituent ID for Individual, Team ID for Team or Company ID for Company. Can be passed as string or as an object. Not needed for Event Meters.</td>
+              </tr>
+              <tr>
+                <td>showMeterPercent</td>
+                <td>String</td>
+                <td>Can set the minimum percent of the meter before it will show</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="documentation-example">
+            <h3>Examples</h3>
+            <p>Event with showMeterPercent set. Meter will only show when 5% or more.</p>
+            <code>
+              &lt;div progress-meter type="event" show-meter-percent="5" fr-id="1070"&gt;&lt;/div&gt;
+            </code>
+            <div progress-meter type="event" show-meter-percent="5" fr-id="1070"></div>
+            <hr />
+
+            <p>Individual setting constituent id as String.</p>
+            <code>
+              &lt;div progress-meter type="individual" id="1001491"&gt;&lt;/div&gt;
+            </code>
+            <div progress-meter type="individual" id="1001491"></div>
+            <hr />
+
+            <p>Individual passing progress data as Object. This is the preferred method when data is already available on page.</p>
+            <code>
+              &lt;div progress-meter type="individual" progress-data="{ amount: ctrl.amount, goal: ctrl.goal }"&gt;&lt;/div&gt;
+            </code>
+            <div progress-meter type="individual" progress-data="{ amount: ctrl.amount, goal: ctrl.goal }"></div>
+            <hr />
+
+            <p>Team setting id as team id Object</p>
+            <code>
+              &lt;div progress-meter type="team" id="ctrl.teamId"&gt;&lt;/div&gt;
+            </code>
+            <div progress-meter type="team" id="ctrl.teamId"></div>
+            <hr />
+
+            <p>Company setting id as String</p>
+            <code>
+              &lt;div progress-meter type="company" id="1013"&gt;&lt;/div&gt;
+            </code>
+            <div progress-meter type="company" id="1013"></div>
+            <hr />
+
+          </div>
+        </div>
       </div>
     </div>
-    <h3>Example</h3>
-    <h4>Event</h4>
-    <code>
-      &lt;div progress-meter type="event" show-meter-percent="5" fr-id="1070"&gt;&lt;/div&gt;
-    </code>
-    <div progress-meter type="event" show-meter-percent="5" fr-id="1070"></div>
-    <hr />
-    <h4>Individual</h4>
-    <code>
-      &lt;div progress-meter type="individual" id="{{ctrl.consId}}"&gt;&lt;/div&gt;
-    </code>
-    <div progress-meter type="individual" progress-data="{ amount: 50000, goal: 100000 }"></div>
-    <div progress-meter type="individual" id="1001491"></div>
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
   <script src="../vendor/ui-bootstrap-tpls-3.0.3.min.js"></script>

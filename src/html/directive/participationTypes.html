@@ -1,0 +1,19 @@
+<div ng-cloak class="lo-participation-types lo-participation-types--{{type}}">
+  <div class="lo-participation-type" ng-repeat="type in participationTypes">
+    <div class="lo-participation-type__head">
+      <p ng-bind-html="type.name"></p>
+      <strong>
+        ${{type.rawFee / 100}} fee | ${{type.rawMinimumGoal / 100}} minimum
+      </strong>
+    </div>
+    <div class="lo-participation-type__body">
+      <small ng-bind-html="type.description">
+      </small>
+    </div>
+    <a ng-href="TRR?fr_id={{frId}}&s_ptype={{type.id}}&pg=tfind" class="btn btn-secondary btn-block btn-sm">
+      Register
+    </a>
+  </div>
+</div>
+
+
