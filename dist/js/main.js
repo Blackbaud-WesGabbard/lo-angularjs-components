@@ -18,16 +18,24 @@
 
   angular.module('ngLuminateLibrary').run([
     '$rootScope', function($rootScope) {
-      return $rootScope.frId = 1070;
+      var $dataRoot;
+      $dataRoot = jQuery('[data-luminate-root]');
+      return $rootScope.frId = $dataRoot.data('fr-id') && !isNaN($dataRoot.data('fr-id')) ? Number($dataRoot.data('fr-id')) : null;
     }
   ]);
+
+  angular.element(document).ready(function() {
+    var appModules;
+    appModules = ['ngLuminateLibrary'];
+    return angular.bootstrap(document, appModules);
+  });
 
   angular.module('ngLuminateLibrary').config([
     '$luminateUtilsConfigProvider', function($luminateUtilsConfigProvider) {
       $luminateUtilsConfigProvider.setPath({
-        nonsecure: 'http://psdemo.convio.net/site/',
-        secure: 'https://secure2.convio.net/psdemo/site/'
-      }).setKey('wDB09SQODRpVIOvX');
+        nonsecure: luminateInstance.nonsecure,
+        secure: luminateInstance.secure
+      }).setKey(luminateInstance.apiKey);
     }
   ]);
 
@@ -106,119 +114,17 @@
             api: 'teamraiser',
             data: dataString
           });
-        },
-        getParticipantProgress: function(requestData) {
-          var dataString;
-          dataString = 'method=getParticipantProgress';
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString
-          });
-        },
-        getParticipantRank: function(requestData, consId) {
-          var dataString;
-          dataString = 'method=getParticipants&first_name=' + encodeURIComponent('%') + '&last_name=' + encodeURIComponent('%') + '&list_sort_column=total&list_ascending=false&list_page_size=500';
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString
-          }).then(function(response) {
-            var participants, ranking, ref;
-            ranking = {};
-            participants = (ref = response.data.getParticipantsResponse) != null ? ref.participant : void 0;
-            if (participants) {
-              if (!angular.isArray(participants)) {
-                participants = [participants];
-              }
-              ranking = {
-                rank: 0,
-                total: 0
-              };
-              angular.forEach(participants, function(participant, key) {
-                ranking.total++;
-                if (participant.consId === String(consId)) {
-                  return ranking = {
-                    rank: key + 1,
-                    total: ranking.total,
-                    amountRaised: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
-                    amountRaisedFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace('.00', ''),
-                    goal: $filter('currency')(participant.goal / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
-                    goalFormatted: $filter('currency')(participant.goal / 100, '$').replace('.00', ''),
-                    name: participant.name.first + ' ' + participant.name.last,
-                    consId: participant.consId,
-                    pageUrl: $luminateUtilsConfig.path.secure + 'TR?fr_id=' + $rootScope.frId + '&pg=personal&px=' + participant.consId,
-                    donationUrl: participant.donationUrl,
-                    aTeamCaptain: participant.aTeamCaptain,
-                    teamName: participant.teamName,
-                    teamPageUrl: participant.teamPageUrl
-                  };
-                }
-              });
-            }
-            return ranking;
-          });
         }
       };
     }
   ]);
 
   angular.module('ngLuminateLibrary').factory('TeamraiserRegistrationService', [
-    '$rootScope', '$luminateRest', function($rootScope, $luminateRest) {
+    '$luminateRest', function($luminateRest) {
       return {
         getParticipationTypes: function(requestData) {
           var dataString;
-          dataString = 'method=getParticipationTypes&fr_id=' + $rootScope.frId;
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString
-          });
-        },
-        getRegistration: function(requestData) {
-          var dataString;
-          dataString = 'method=getRegistration';
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString,
-            requiresAuth: true
-          });
-        },
-        getRegistrationDocument: function(requestData) {
-          var dataString;
-          dataString = 'method=getRegistrationDocument&fr_id=' + $rootScope.frId;
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString
-          });
-        },
-        updateRegistration: function(requestData) {
-          var dataString;
-          dataString = 'method=updateRegistration';
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString,
-            requiresAuth: true
-          });
-        },
-        validateDiscount: function(requestData) {
-          var dataString;
-          dataString = 'method=validateDiscount&fr_id=' + $rootScope.frId;
+          dataString = 'method=getParticipationTypes';
           if (requestData && requestData !== '') {
             dataString += '&' + requestData;
           }
@@ -232,20 +138,8 @@
   ]);
 
   angular.module('ngLuminateLibrary').factory('TeamraiserTeamService', [
-    '$rootScope', '$filter', '$luminateRest', '$luminateUtilsConfig', function($rootScope, $filter, $luminateRest, $luminateUtilsConfig) {
+    '$luminateRest', function($luminateRest) {
       return {
-        updateTeamInformation: function(requestData) {
-          var dataString;
-          dataString = 'method=updateTeamInformation&fr_id=' + $rootScope.frId;
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString,
-            requiresAuth: true
-          });
-        },
         getTeams: function(requestData) {
           var dataString;
           dataString = 'method=getTeamsByInfo';
@@ -256,58 +150,6 @@
             api: 'teamraiser',
             data: dataString,
             requiresAuth: true
-          });
-        },
-        getTeamDivisions: function(requestData) {
-          var dataString;
-          dataString = 'method=getTeamDivisions';
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            data: dataString
-          });
-        },
-        getTeamRank: function(requestData, teamId) {
-          var dataString;
-          dataString = 'method=getTeamsByInfo&first_name=%25&last_name=%25&list_sort_column=total&list_ascending=false&list_page_size=500';
-          if (requestData && requestData !== '') {
-            dataString += '&' + requestData;
-          }
-          return $luminateRest.request({
-            api: 'teamraiser',
-            requiresAuth: true,
-            data: dataString
-          }).then(function(response) {
-            var ranking, ref, ref1, teams, totalTeams;
-            ranking = {};
-            totalTeams = (ref = response.data.getTeamSearchByInfoResponse) != null ? ref.totalNumberResults : void 0;
-            teams = (ref1 = response.data.getTeamSearchByInfoResponse) != null ? ref1.team : void 0;
-            if (teams) {
-              if (!angular.isArray(teams)) {
-                teams = [teams];
-              }
-              ranking = {
-                rank: 0,
-                total: Number(totalTeams)
-              };
-              angular.forEach(teams, function(team, key) {
-                if (team.id === String(teamId)) {
-                  return ranking = {
-                    rank: key + 1,
-                    total: Number(totalTeams),
-                    amountRaised: $filter('currency')(team.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace('.00', ''),
-                    amountRaisedFormatted: $filter('currency')(team.amountRaised / 100, '$').replace('.00', ''),
-                    name: team.name,
-                    numMembers: team.numMembers,
-                    teamId: team.id,
-                    pageUrl: $luminateUtilsConfig.path.secure + 'TR?fr_id=' + $rootScope.frId + '&pg=team&team_id=' + team.id
-                  };
-                }
-              });
-            }
-            return ranking;
           });
         }
       };
@@ -333,17 +175,18 @@
       return {
         templateUrl: APP_INFO.rootPath + 'dist/html/directive/participationTypes.html',
         scope: {
-          frId: '@',
-          layout: '@',
-          isClickable: '@'
+          frId: '=?',
+          layout: '@'
         },
         controller: [
           '$rootScope', '$scope', 'TeamraiserRegistrationService', function($rootScope, $scope, TeamraiserRegistrationService) {
+            var eventId;
+            eventId = $scope.frId ? $scope.frId : $rootScope.frId;
             $scope.participationOptions = {
               participationTypeId: null
             };
             $scope.participationTypes = [];
-            return TeamraiserRegistrationService.getParticipationTypes().then(function(response) {
+            return TeamraiserRegistrationService.getParticipationTypes('fr_id=' + eventId).then(function(response) {
               if (response.data.getParticipationTypesResponse) {
                 return $scope.participationTypes = response.data.getParticipationTypesResponse.participationType;
               }
@@ -425,6 +268,55 @@
                   if (response.data.getCompaniesResponse) {
                     company = response.data.getCompaniesResponse.company;
                     return setMeter(company.amountRaised, company.goal);
+                  }
+                });
+              }
+            }
+          }
+        ]
+      };
+    }
+  ]);
+
+  angular.module('luminateControllers').directive('topList', [
+    'APP_INFO', '$rootScope', function(APP_INFO, $rootScope) {
+      return {
+        templateUrl: APP_INFO.rootPath + 'dist/html/directive/topList.html',
+        scope: {
+          type: '@',
+          sizeLimit: '@',
+          showBadges: '@',
+          id: '=?',
+          frId: '=?',
+          listData: '=?'
+        },
+        controller: [
+          '$rootScope', '$scope', '$filter', 'TeamraiserEventService', 'TeamraiserParticipantService', 'TeamraiserTeamService', 'TeamraiserCompanyService', function($rootScope, $scope, $filter, TeamraiserEventService, TeamraiserParticipantService, TeamraiserTeamService, TeamraiserCompanyService) {
+            var sizeLimit;
+            $scope.eventId = $scope.frId ? $scope.frId : $rootScope.frId;
+            $scope.list = {};
+            sizeLimit = $scope.sizeLimit ? $scope.sizeLimit : 500;
+            if ($scope.listData) {
+              return console.log(listData);
+            } else {
+              if ($scope.type === 'participants') {
+                TeamraiserParticipantService.getParticipants('&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_sort_column=total&list_ascending=false&list_page_size=' + sizeLimit + '&fr_id=' + $scope.eventId).then(function(response) {
+                  if (response.data.getParticipantsResponse) {
+                    return $scope.list = response.data.getParticipantsResponse.participant;
+                  }
+                });
+              }
+              if ($scope.type === 'teams') {
+                TeamraiserTeamService.getTeams('team_name=' + encodeURIComponent('%') + '&list_sort_column=total&list_ascending=false&list_page_size=' + sizeLimit + '&fr_id=' + $scope.eventId).then(function(response) {
+                  if (response.data.getTeamSearchByInfoResponse) {
+                    return $scope.list = response.data.getTeamSearchByInfoResponse.team;
+                  }
+                });
+              }
+              if ($scope.type === 'companies') {
+                return TeamraiserCompanyService.getCompanies('company_name=' + encodeURIComponent('%%%') + '&list_sort_column=total&list_ascending=false&list_page_size=' + sizeLimit + '&fr_id=' + $scope.eventId).then(function(response) {
+                  if (response.data.getCompaniesResponse) {
+                    return $scope.list = response.data.getCompaniesResponse.company;
                   }
                 });
               }

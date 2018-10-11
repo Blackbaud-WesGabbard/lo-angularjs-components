@@ -27,44 +27,4 @@ angular.module 'ngLuminateLibrary'
         $luminateRest.request
           api: 'teamraiser'
           data: dataString
-
-      getParticipantProgress: (requestData) ->
-        dataString = 'method=getParticipantProgress'
-        dataString += '&' + requestData if requestData and requestData isnt ''
-        $luminateRest.request
-          api: 'teamraiser'
-          data: dataString
-
-      getParticipantRank: (requestData, consId) ->
-        dataString = 'method=getParticipants&first_name=' + encodeURIComponent('%') + '&last_name=' + encodeURIComponent('%') + '&list_sort_column=total&list_ascending=false&list_page_size=500'
-        dataString += '&' + requestData if requestData and requestData isnt ''
-        $luminateRest.request
-          api: 'teamraiser'
-          data: dataString
-        .then (response) ->
-          ranking = {}
-          participants = response.data.getParticipantsResponse?.participant
-          if participants
-            participants = [participants] if not angular.isArray participants
-            ranking =
-              rank: 0
-              total: 0
-            angular.forEach participants, (participant, key) ->
-              ranking.total++
-              if participant.consId is String consId
-                ranking =
-                  rank: key + 1
-                  total: ranking.total
-                  amountRaised: $filter('currency')(participant.amountRaised / 100, '$').replace('$', '').replace(/,/g, '').replace '.00', ''
-                  amountRaisedFormatted: $filter('currency')(participant.amountRaised / 100, '$').replace '.00', ''
-                  goal: $filter('currency')(participant.goal / 100, '$').replace('$', '').replace(/,/g, '').replace '.00', ''
-                  goalFormatted: $filter('currency')(participant.goal / 100, '$').replace '.00', ''
-                  name: participant.name.first + ' ' + participant.name.last
-                  consId: participant.consId
-                  pageUrl: $luminateUtilsConfig.path.secure + 'TR?fr_id=' + $rootScope.frId + '&pg=personal&px=' + participant.consId
-                  donationUrl: participant.donationUrl
-                  aTeamCaptain: participant.aTeamCaptain
-                  teamName: participant.teamName
-                  teamPageUrl: participant.teamPageUrl
-          ranking
   ]

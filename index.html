@@ -1,16 +1,15 @@
 <!doctype html>
-<html lang="en" ng-app="ngLuminateLibrary">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Luminate Online AngularJS Component Library</title>
-  <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700|Kalam:300,400,700">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
   <link rel="stylesheet" href="../dist/css/main.min.css">
 </head>
 <body id="data-root" data-luminate-root data-fr-id="1070" data-api-key="wDB09SQODRpVIOvX" data-table-prefix="psdemo" data-domain="http://psdemo.convio.net/site/" data-secure-domain="https://secure2.convio.net/psdemo/site/">
-  <div class="container" ng-controller="MainCtrl">
+  <div class="container container--fixed" ng-controller="MainCtrl">
     <nav class="navbar navbar-light bg-primary navbar-fixed-left">
       <div class="container">
         <ul class="nav navbar-nav">
@@ -24,10 +23,15 @@
               Participation Types
             </a>
           </li>
+          <li>
+            <a href="#top-list">
+              Top List
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
-    <div class="container--fixed">
+    <div class="documentation__content">
       <h1>
         Luminate Online AngularJS Component Library
       </h1>
@@ -48,14 +52,14 @@
             </thead>
             <tbody>
               <tr>
-                <td>type</td>
-                <td>String</td>
-                <td>Required, can be set as Event, Individual, Team or Company.</td>
-              </tr>
-              <tr>
                 <td>frId</td>
                 <td>String or Object</td>
                 <td>TeamRaiser id is optional if embedded in TeamRaiser, otherwise required.</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>String</td>
+                <td>Required, can be set as Event, Individual, Team or Company.</td>
               </tr>
               <tr>
                 <td>progressData</td>
@@ -74,7 +78,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="documentation-example">
+          <div class="documentation__example">
             <h3>Examples</h3>
             <p>Event with showMeterPercent set. Meter will only show when 5% or more.</p>
             <code>
@@ -109,7 +113,6 @@
               &lt;div progress-meter type="company" id="1013"&gt;&lt;/div&gt;
             </code>
             <div progress-meter type="company" id="1013"></div>
-            <hr />
           </div>
         </div>
       </div>
@@ -119,7 +122,29 @@
           <h2>Participation Types</h2>
           <p>Provide a list of active participation types for a TeamRaiser Event. Defaults to horizontal layout, but can specify vertical layout. Vertical layout used for registration and will make the particpation type selectable. If fee or minimum goal is greater than zero, will be included in an unordered list. participation type description will be inlcuded as last item in unordered list.</p>
 
-          <div class="documentation-example">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Attribute</th>
+                <th scope="col">Format</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>frId</td>
+                <td>String or Object</td>
+                <td>TeamRaiser id is optional if embedded in TeamRaiser, otherwise required.</td>
+              </tr>
+              <tr>
+                <td>layout</td>
+                <td>String</td>
+                <td>Default is horizontal, set to vertical to stack particpation types into selectable panels.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="documentation__example">
             <h3>Examples</h3>
             <p>List of Participation Types</p>
             <code>
@@ -135,9 +160,83 @@
           </div>
         </div>
       </div>
+
+      <div class="card" id="top-list">
+        <div class="card-body">
+          <h2>Top List</h2>
+          <p>Provide top list.</p>
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Attribute</th>
+                <th scope="col">Format</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>frId</td>
+                <td>String or Object</td>
+                <td>TeamRaiser id is optional if embedded in TeamRaiser, otherwise required.</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>String</td>
+                <td>Required, can be set to retrieve Top Participants, Top Teams or Top Companies.</td>
+              </tr>
+              <tr>
+                <td>id</td>
+                <td>String or Object</td>
+                <td>Optional. By default will fetch based on TeamRaiser Event. However can pass Team id or Company id to change list.</td>
+              </tr>
+              <tr>
+                <td>sizeLimit</td>
+                <td>String</td>
+                <td>Optional. Set the size of the list. By default set at 25, has a max of 500.</td>
+              </tr>
+              <tr>
+                <td>showBadges</td>
+                <td>Boolean</td>
+                <td>By default set to false. If set to true then will show default Luminate badges. This includes Milestone and Personal Gift Badges (does not inlcude custom badges).</td>
+              </tr>
+              <tr>
+                <td>listData</td>
+                <td>Object</td>
+                <td>Pass the listData as an object if data already present. This is preffered method when data aleady in scope to prevent redundant API calls.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="documentation__example">
+            <h3>Examples</h3>
+            <div class="row">
+              <div class="col">
+                <h4>Top Participants</h4>
+                <div top-list type="participants" size-limit="5"></div>
+              </div>
+              <div class="col">
+                <h4>Top Teams</h4>
+                <div top-list type="teams"></div>
+              </div>
+              <div class="col">
+                <h4>Top Companies</h4>
+                <div top-list type="companies"></div>
+              </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+  <script>
+    var luminateInstance = {
+      nonSecure: 'http://psdemo.convio.net/site/',
+      secure: 'https://secure2.convio.net/psdemo/site/',
+      apiKey: 'wDB09SQODRpVIOvX'
+    }
+
+  </script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="../vendor/ui-bootstrap-tpls-3.0.3.min.js"></script>
   <script src="../vendor/angular-luminate-utils.min.js"></script>
   <script src="../dist/js/main.js"></script>

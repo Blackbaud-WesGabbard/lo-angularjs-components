@@ -19,7 +19,12 @@ angular.module 'ngLuminateLibrary'
   .run [
     '$rootScope'
     ($rootScope) ->
-      #$dataRoot = jQuery '[data-luminate-root]'
-      #console.log $dataRoot
-      $rootScope.frId = 1070
+      $dataRoot = jQuery '[data-luminate-root]'
+      $rootScope.frId = if $dataRoot.data('fr-id') and not isNaN $dataRoot.data('fr-id') then Number $dataRoot.data('fr-id') else null
   ]
+
+angular.element(document).ready ->
+  appModules = [
+    'ngLuminateLibrary'
+  ]
+  angular.bootstrap document, appModules

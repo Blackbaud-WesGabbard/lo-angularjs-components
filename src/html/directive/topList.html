@@ -1,0 +1,23 @@
+<div class="lo-top-list" ng-if="list.length > 0" ng-cloak>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex justify-content-between" ng-repeat="item in list">
+      <div>
+        <img ng-src="{{item.badges.personalDonationBadgeSmallUrl}}" ng-if="item.badges.personalDonationBadgeSmallUrl" />
+        <a ng-href="TR?pg=personal&fr_id={{eventId}}&px={{item.consId}}" ng-if="type == 'participants'">
+          <span ng-bind="item.name.first"></span> <span ng-bind="item.name.last"></span>
+        </a>
+        <a ng-href="TR?pg=team&fr_id={{eventId}}&team_id={{item.teamId}}" ng-if="type == 'teams'">
+          <span ng-bind="item.name"></span>
+        </a>
+        <a ng-href="TR?pg=company&fr_id={{eventId}}&company_id={{item.companyId}}" ng-if="type == 'companies'">
+          <span ng-bind="item.companyName"></span>
+        </a>
+      </div>
+      <div>
+        {{item.amountRaised / 100 | currency:"$":0}}
+      </div>
+    </li>
+  </ul>
+</div>
+
+

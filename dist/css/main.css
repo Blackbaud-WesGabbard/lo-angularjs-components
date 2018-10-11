@@ -7822,4 +7822,4 @@ a.text-dark:hover, a.text-dark:focus {
   @media (min-width: 768px) {
     .container--fixed {
       width: calc(100% - 230px);
-      margin-left: 180px; } }
+      margin-left: 230px; } }

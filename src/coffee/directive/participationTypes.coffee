@@ -5,18 +5,18 @@ angular.module 'luminateControllers'
     (APP_INFO, $rootScope) ->
       templateUrl: APP_INFO.rootPath + 'dist/html/directive/participationTypes.html'
       scope:
-        frId: '@'
+        frId: '=?'
         layout: '@'
-        isClickable: '@'
       controller: [
         '$rootScope'
         '$scope'
         'TeamraiserRegistrationService'
         ($rootScope, $scope, TeamraiserRegistrationService) ->
+          eventId = if $scope.frId then $scope.frId else $rootScope.frId
           $scope.participationOptions =
             participationTypeId: null
           $scope.participationTypes = []
-          TeamraiserRegistrationService.getParticipationTypes()
+          TeamraiserRegistrationService.getParticipationTypes 'fr_id=' + eventId
             .then (response) ->
               if response.data.getParticipationTypesResponse
                 $scope.participationTypes = response.data.getParticipationTypesResponse.participationType

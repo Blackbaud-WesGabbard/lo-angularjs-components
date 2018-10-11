@@ -3,8 +3,8 @@ angular.module 'ngLuminateLibrary'
     '$luminateUtilsConfigProvider'
     ($luminateUtilsConfigProvider) ->
       $luminateUtilsConfigProvider.setPath
-        nonsecure: 'http://psdemo.convio.net/site/'
-        secure: 'https://secure2.convio.net/psdemo/site/'
-      .setKey 'wDB09SQODRpVIOvX'
+        nonsecure: luminateInstance.nonsecure
+        secure: luminateInstance.secure
+      .setKey luminateInstance.apiKey
       return
   ]
