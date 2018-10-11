@@ -1,0 +1,14 @@
+.lo-participation-types {
+  ul {
+    padding-inline-start: 20px;
+  }
+  .lo-participation-type {
+    margin: 0 0 $spacer;
+  }
+}
+
+.lo-participation-types--horizontal {
+  .lo-participation-type {
+    width: 250px;
+  }
+}

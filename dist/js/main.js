@@ -167,6 +167,70 @@
     }
   ]);
 
+  angular.module('ngLuminateLibrary').factory('TeamraiserRegistrationService', [
+    '$rootScope', '$luminateRest', function($rootScope, $luminateRest) {
+      return {
+        getParticipationTypes: function(requestData) {
+          var dataString;
+          dataString = 'method=getParticipationTypes&fr_id=' + $rootScope.frId;
+          if (requestData && requestData !== '') {
+            dataString += '&' + requestData;
+          }
+          return $luminateRest.request({
+            api: 'teamraiser',
+            data: dataString
+          });
+        },
+        getRegistration: function(requestData) {
+          var dataString;
+          dataString = 'method=getRegistration';
+          if (requestData && requestData !== '') {
+            dataString += '&' + requestData;
+          }
+          return $luminateRest.request({
+            api: 'teamraiser',
+            data: dataString,
+            requiresAuth: true
+          });
+        },
+        getRegistrationDocument: function(requestData) {
+          var dataString;
+          dataString = 'method=getRegistrationDocument&fr_id=' + $rootScope.frId;
+          if (requestData && requestData !== '') {
+            dataString += '&' + requestData;
+          }
+          return $luminateRest.request({
+            api: 'teamraiser',
+            data: dataString
+          });
+        },
+        updateRegistration: function(requestData) {
+          var dataString;
+          dataString = 'method=updateRegistration';
+          if (requestData && requestData !== '') {
+            dataString += '&' + requestData;
+          }
+          return $luminateRest.request({
+            api: 'teamraiser',
+            data: dataString,
+            requiresAuth: true
+          });
+        },
+        validateDiscount: function(requestData) {
+          var dataString;
+          dataString = 'method=validateDiscount&fr_id=' + $rootScope.frId;
+          if (requestData && requestData !== '') {
+            dataString += '&' + requestData;
+          }
+          return $luminateRest.request({
+            api: 'teamraiser',
+            data: dataString
+          });
+        }
+      };
+    }
+  ]);
+
   angular.module('ngLuminateLibrary').factory('TeamraiserTeamService', [
     '$rootScope', '$filter', '$luminateRest', '$luminateUtilsConfig', function($rootScope, $filter, $luminateRest, $luminateUtilsConfig) {
       return {
@@ -264,28 +328,24 @@
     }
   ]);
 
-  angular.module('luminateControllers').directive('progressMeter', [
+  angular.module('luminateControllers').directive('participationTypes', [
     'APP_INFO', '$rootScope', function(APP_INFO, $rootScope) {
       return {
         templateUrl: APP_INFO.rootPath + 'dist/html/directive/participationTypes.html',
         scope: {
-          type: '@',
-          showMeterPercent: '@',
-          id: '=?',
-          frId: '=?',
-          progressData: '=?'
+          frId: '@',
+          layout: '@',
+          isClickable: '@'
         },
         controller: [
           '$rootScope', '$scope', 'TeamraiserRegistrationService', function($rootScope, $scope, TeamraiserRegistrationService) {
+            $scope.participationOptions = {
+              participationTypeId: null
+            };
             $scope.participationTypes = [];
             return TeamraiserRegistrationService.getParticipationTypes().then(function(response) {
               if (response.data.getParticipationTypesResponse) {
-                $scope.participationTypes = response.data.getParticipationTypesResponse.participationType;
-                return angular.forEach($scope.participationTypes, function(type) {
-                  var formatStr;
-                  formatStr = type.description.replace(/(\r\n\t|\n|\r\t)/gm, "").trim();
-                  return type.description = formatStr.replace(/\|/g, '<br />');
-                });
+                return $scope.participationTypes = response.data.getParticipationTypesResponse.participationType;
               }
             });
           }

@@ -7784,6 +7784,16 @@ a.text-dark:hover, a.text-dark:focus {
     .lo-progress-meter__data {
       font-size: 2rem; } }
 
+.lo-participation-types ul {
+  -webkit-padding-start: 20px;
+          padding-inline-start: 20px; }
+
+.lo-participation-types .lo-participation-type {
+  margin: 0 0 1rem; }
+
+.lo-participation-types--horizontal .lo-participation-type {
+  width: 250px; }
+
 .navbar-fixed-left,
 .navbar-fixed-right {
   position: fixed;
