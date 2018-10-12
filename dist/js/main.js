@@ -20,7 +20,10 @@
     '$rootScope', function($rootScope) {
       var $dataRoot;
       $dataRoot = jQuery('[data-luminate-root]');
-      return $rootScope.frId = $dataRoot.data('fr-id') && !isNaN($dataRoot.data('fr-id')) ? Number($dataRoot.data('fr-id')) : null;
+      $rootScope.frId = $dataRoot.data('fr-id') && !isNaN($dataRoot.data('fr-id')) ? Number($dataRoot.data('fr-id')) : null;
+      $rootScope.nonSecure = luminateProperties.nonSecure;
+      $rootScope.secure = luminateProperties.secure;
+      return $rootScope.path = luminateProperties.secure.replace('/site/', '');
     }
   ]);
 
@@ -33,9 +36,9 @@
   angular.module('ngLuminateLibrary').config([
     '$luminateUtilsConfigProvider', function($luminateUtilsConfigProvider) {
       $luminateUtilsConfigProvider.setPath({
-        nonsecure: luminateInstance.nonsecure,
-        secure: luminateInstance.secure
-      }).setKey(luminateInstance.apiKey);
+        nonsecure: luminateProperties.nonSecure,
+        secure: luminateProperties.secure
+      }).setKey(luminateProperties.apiKey);
     }
   ]);
 

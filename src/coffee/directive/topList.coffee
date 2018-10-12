@@ -23,7 +23,6 @@ angular.module 'luminateControllers'
           $scope.eventId = if $scope.frId then $scope.frId else $rootScope.frId
           $scope.list = {}
           sizeLimit = if $scope.sizeLimit then $scope.sizeLimit else 500
-
           if $scope.listData
             console.log listData
           else
@@ -37,7 +36,6 @@ angular.module 'luminateControllers'
                 .then (response) ->
                   if response.data.getTeamSearchByInfoResponse
                     $scope.list = response.data.getTeamSearchByInfoResponse.team
-
             if $scope.type is 'companies'
               TeamraiserCompanyService.getCompanies 'company_name=' + encodeURIComponent('%%%') + '&list_sort_column=total&list_ascending=false&list_page_size=' + sizeLimit + '&fr_id=' + $scope.eventId
                 .then (response) ->

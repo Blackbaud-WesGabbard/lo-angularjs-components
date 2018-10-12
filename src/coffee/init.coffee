@@ -21,6 +21,9 @@ angular.module 'ngLuminateLibrary'
     ($rootScope) ->
       $dataRoot = jQuery '[data-luminate-root]'
       $rootScope.frId = if $dataRoot.data('fr-id') and not isNaN $dataRoot.data('fr-id') then Number $dataRoot.data('fr-id') else null
+      $rootScope.nonSecure = luminateProperties.nonSecure
+      $rootScope.secure = luminateProperties.secure
+      $rootScope.path = luminateProperties.secure.replace('/site/', '')
   ]
 
 angular.element(document).ready ->

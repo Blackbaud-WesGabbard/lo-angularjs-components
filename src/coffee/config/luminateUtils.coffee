@@ -3,8 +3,8 @@ angular.module 'ngLuminateLibrary'
     '$luminateUtilsConfigProvider'
     ($luminateUtilsConfigProvider) ->
       $luminateUtilsConfigProvider.setPath
-        nonsecure: luminateInstance.nonsecure
-        secure: luminateInstance.secure
-      .setKey luminateInstance.apiKey
+        nonsecure: luminateProperties.nonSecure
+        secure: luminateProperties.secure
+      .setKey luminateProperties.apiKey
       return
   ]

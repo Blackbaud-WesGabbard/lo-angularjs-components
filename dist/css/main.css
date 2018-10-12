@@ -7794,6 +7794,13 @@ a.text-dark:hover, a.text-dark:focus {
 .lo-participation-types--horizontal .lo-participation-type {
   width: 250px; }
 
+.lo-top-list li {
+  padding-left: 0;
+  padding-right: 0; }
+
+.lo-top-list__amount {
+  margin-left: 1rem; }
+
 .navbar-fixed-left,
 .navbar-fixed-right {
   position: fixed;
