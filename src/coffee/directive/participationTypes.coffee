@@ -13,9 +13,16 @@ angular.module 'luminateControllers'
         'TeamraiserRegistrationService'
         ($rootScope, $scope, TeamraiserRegistrationService) ->
           eventId = if $scope.frId then $scope.frId else $rootScope.frId
-          $scope.participationOptions =
-            participationTypeId: null
+          $scope.selectedParticipationType =
+            id: null
+            rawAmount: null
           $scope.participationTypes = []
+
+          $scope.selectParticipation = (type) ->
+            $scope.selectedParticipationType =
+              id: type.id
+              rawAmount: type.rawAmount
+
           TeamraiserRegistrationService.getParticipationTypes 'fr_id=' + eventId
             .then (response) ->
               if response.data.getParticipationTypesResponse

@@ -31,3 +31,13 @@ grunt dev
 ```
 
 Guide available at [http://localhost:8000/index.html](http://localhost:8000/index.html)
+
+
+Developer Guidelines
+-----------------------
+SASS
+- use BEM selectors
+
+Coffee
+- keep controllers small and modular
+- initiate all data objects and arrays at top of controller

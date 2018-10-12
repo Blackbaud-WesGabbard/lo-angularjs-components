@@ -185,10 +185,17 @@
           '$rootScope', '$scope', 'TeamraiserRegistrationService', function($rootScope, $scope, TeamraiserRegistrationService) {
             var eventId;
             eventId = $scope.frId ? $scope.frId : $rootScope.frId;
-            $scope.participationOptions = {
-              participationTypeId: null
+            $scope.selectedParticipationType = {
+              id: null,
+              rawAmount: null
             };
             $scope.participationTypes = [];
+            $scope.selectParticipation = function(type) {
+              return $scope.selectedParticipationType = {
+                id: type.id,
+                rawAmount: type.rawAmount
+              };
+            };
             return TeamraiserRegistrationService.getParticipationTypes('fr_id=' + eventId).then(function(response) {
               if (response.data.getParticipationTypesResponse) {
                 return $scope.participationTypes = response.data.getParticipationTypesResponse.participationType;
