@@ -1,0 +1,16 @@
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Attribute/Method</th>
+      <th scope="col">Format</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(key, value) in selectedComponent">
+      <td ng-bind="key"></td>
+      <td ng-bind="value.format"></td>
+      <td ng-bind-html="value.description"></td>
+    </tr>
+  </tbody>
+</table>

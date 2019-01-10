@@ -1,0 +1,29 @@
+.container--fixed{
+  width: 100%;
+
+  @include media-breakpoint-up(md) {
+    width: calc(100% - 230px);
+    margin-left: 230px;
+    overflow-y: scroll;
+  }
+}
+
+.documentation__content {
+  padding: 0 0 ($spacer * 3) $spacer;
+}
+
+.documentation__examples {
+  h3 + .documentation__example {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .documentation__example {
+    padding: ($spacer * 1.5) 0;
+    border-bottom: 2px solid $secondary;
+
+    &:last-child {
+      border-bottom: 0 none;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<h2>Donation Levels</h2>
+<p>Provides a button list of donation levels either pulled from the TeamRaiser Configuration for additional donation during registration (must set frId) or from a donation form (must pass formId).</p>
+<div component-table component="donationLevels"></div>
+<div class="documentation__examples">
+  <h3>Examples</h3>
+  <div class="documentation__example">
+    <p>Pull in list of donation levels from a donation form with large buttons.</p>
+    <code>
+      &lt;div donation-levels form-id="1400" button-size="lg"&gt;&lt;/div&gt;
+    </code>
+    <div donation-levels form-id="1400" button-size="lg"></div>
+  </div>
+  <div class="documentation__example">
+    <p>Pull in list of donation levels using donationLevels object set in parent controller. Example can be seen <a href="https://github.com/convio/luminate-angularjs-library/blob/master/src/documentation/coffee/controller/main.coffee" target="_blank">in this pages Controller</a>.</p>
+    <code>
+      &lt;div donation-levels donation-levels-data="donationLevels"&gt;&lt;/div&gt;
+    </code>
+    <div donation-levels donation-levels-data="donationLevels"></div>
+  </div>
+</div>

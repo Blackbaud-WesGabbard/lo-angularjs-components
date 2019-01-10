@@ -1,0 +1,22 @@
+.navbar-fixed-left,
+.navbar-fixed-right {
+  width: 100%;
+  z-index: 1030;
+
+  @include media-breakpoint-up(md) {
+    position: fixed;
+    top: 0;
+    right: auto;
+    left: 0;
+    border-right: 1px solid $gray-300;
+    width: 230px;
+    height: 100vh;
+  }
+
+  a,
+  a:link,
+  a:visited {
+    color: $white;
+    font-weight: bold;
+  }
+}
