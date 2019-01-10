@@ -1,0 +1,28 @@
+<div class="lo-progress-badges lo-progress-badges--{{type}}">
+  <div ng-if="badges.defaultBadges.length > 0" ng-cloak>
+    <div class="d-flex flex-wrap justify-content-center">
+      <div class="lo-progress-badges__badge text-center" ng-if="badges.defaultBadges[0].participantMilestoneLargeBadgeUrl">
+        <img ng-src="{{$root.path}}{{badges.defaultBadges[0].participantMilestoneLargeBadgeUrl}}" alt="{{badges.defaultBadges[0].participantMilestoneBadgeName}}" />
+        <div class="lo-progress-badges__name" ng-bind="badges.defaultBadges[0].participantMilestoneBadgeName"></div>
+        <div class="lo-progress-badges__text" ng-bind="badges.defaultBadges[0].participantMilestoneBadgeDesc"></div>
+      </div>
+
+      <div class="lo-progress-badges__badge text-center" ng-if="badges.defaultBadges[0].personalDonationBadgeLargeUrl">
+        <img ng-src="{{$root.path}}{{badges.defaultBadges[0].personalDonationBadgeLargeUrl}}" alt="{{badges.defaultBadges[0].personalDonationBadgeName}}" />
+        <div class="lo-progress-badges__name" ng-bind-html="badges.defaultBadges[0].personalDonationBadgeName"></div>
+        <div class="lo-progress-badges__text" ng-bind-html="badges.defaultBadges[0].personalDonationBadgeDesc"></div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="badges.customBadges.length > 0">
+    <div class="d-flex flex-wrap justify-content-center">
+      <div class="lo-progress-badges__badge text-center" ng-repeat="badge in badges.customBadges">
+        <img ng-src="{{badge.url}}" alt="{{badge.name}}" />
+        <div class="lo-progress-badges__name" ng-bind-html="badge.name"></div>
+        <div class="lo-progress-badges__text" ng-bind-html="badge.text" ng-if="badge.text"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

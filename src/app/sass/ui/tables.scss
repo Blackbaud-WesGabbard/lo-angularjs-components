@@ -1,0 +1,15 @@
+.lo-table {
+  .lo-table__sorting {
+		color: $secondary;
+
+		&.active {
+			font-weight: 700;
+			color: $primary;
+		}
+	}
+
+	td,
+	th {
+		vertical-align: middle;
+	}
+}

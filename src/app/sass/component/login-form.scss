@@ -1,0 +1,9 @@
+.lo-login-form {
+  &.form-inline {
+    margin: ($spacer / 2) auto;
+
+    .form-group {
+      margin-right: $spacer / 4;
+    }
+  }
+}

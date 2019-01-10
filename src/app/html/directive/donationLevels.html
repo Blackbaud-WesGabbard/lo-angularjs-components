@@ -1,0 +1,29 @@
+<div class="d-flex justify-content-center flex-wrap lo-donation-levels" ng-if="donationLevels" ng-cloak>
+  <div class="lo-donation-level" ng-repeat="donationLevel in donationLevels.donationLevel" ng-if="state.type != 'registration'">
+    <div ng-if="donationLevel.userSpecified == 'false'">
+      <button type="button" class="btn btn-primary" ng-class="{'active': state.activeLevel == donationLevel.amount.formatted, 'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}" ng-click="toggleDonationLevel(donationLevel)" ng-cloak>
+        {{donationLevel.amount.decimal | currency:"$":0}}
+      </button>
+    </div>
+    <div ng-if="donationLevel.userSpecified == 'true'" class="lo-donation-level--other">
+      <label class="sr-only" for="ng_donation_level_other_amount">Other Amount</label>
+      <input type="text" class="btn btn-primary" ng-class="{'active': state.activeLevel == 'other', 'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}" name="ng_donation_level_other_amount" id="ng_donation_level_other_amount" ng-model="state.ng_donation_level_other_amount" placeholder="$ Other" ng-click="toggleDonationLevel('other')" ng-keyup="setOtherAmount(state.ng_donation_level_other_amount)">
+    </div>
+  </div>
+  <div class="lo-donation-level" ng-repeat="donationLevel in donationLevels.donationLevel" ng-if="state.type == 'registration'">
+    <button type="button" class="btn btn-primary" ng-class="{'active': state.activeLevel == donationLevel.amount.formatted, 'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}" ng-click="toggleDonationLevel(donationLevel)" ng-cloak>
+        {{donationLevel.amount.decimal | currency:"$":0}}
+    </button>
+  </div>
+  <div class="lo-donation-level lo-donation-level--other" ng-if="donationLevels.manualAllowed == 'true'">
+    <label class="sr-only" for="ng_donation_level_other_amount">Other Amount</label>
+    <input type="text" class="btn btn-primary" ng-class="{'active': state.activeLevel == 'other', 'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}" name="ng_donation_level_other_amount" id="ng_donation_level_other_amount" ng-model="state.ng_donation_level_other_amount" placeholder="$ Other" ng-click="toggleDonationLevel('other')" ng-keyup="setOtherAmount(state.ng_donation_level_other_amount)">
+  </div>
+  <div class="lo-donation-level lo-donation-level--none" ng-if="noThanks">
+    <button type="button" class="btn btn-primary" ng-class="{'active': state.activeLevel == 'none', 'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}" ng-click="toggleDonationLevel('none')">
+      No, Thanks
+    </button>
+  </div>
+</div>
+
+

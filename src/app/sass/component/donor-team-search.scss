@@ -1,0 +1,51 @@
+.lo-donor-team-search__forms {
+  legend {
+    font-size: 1rem;
+  }
+  > div {
+    @include media-breakpoint-down(md) {
+      flex: 1;
+    }
+
+    @include media-breakpoint-down(sm) {
+      &:first-child {
+        margin-right: $spacer;
+      }
+    }
+  }
+  .form-group {
+    margin: 0 ($spacer / 2) ($spacer / 2) 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    @include media-breakpoint-down(md) {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+.lo-donor-team-search__results {
+  margin: ($spacer * 2) auto 0;
+
+  .h5 {
+    text-transform: capitalize;
+    display: block;
+  }
+
+  .alert {
+    margin: $spacer auto;
+  }
+}
+
+.lo-donor-team-search__cta {
+  .btn {
+    margin: ($spacer / 2) 0 ($spacer / 2) $spacer ;
+
+    @include media-breakpoint-down(xs) {
+      display: block;
+    }
+  }
+}

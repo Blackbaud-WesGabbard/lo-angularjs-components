@@ -1,0 +1,13 @@
+.lo-top-list {
+  max-width: 400px;
+  margin: auto;
+  
+  li {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.lo-top-list__amount {
+  margin-left: $spacer;
+}

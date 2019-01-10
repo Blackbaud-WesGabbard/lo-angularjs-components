@@ -1,0 +1,22 @@
+.lo-roster-list__filter {
+	margin-bottom: $spacer * 2;
+
+	.form-group {
+		margin-right: $spacer / 2;
+	}
+}
+
+.lo-results-list__filter-label {
+	text-transform: capitalize;
+}
+
+.lo-roster-list__cta--join {
+	margin-left: $spacer / 2;
+}
+
+.lo-roster-list__results {
+	td a {
+		vertical-align: middle;
+		margin-left: $spacer / 4;
+	}	
+}

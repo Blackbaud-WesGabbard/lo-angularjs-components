@@ -1,0 +1,43 @@
+.pagination {
+  margin: ($spacer * 2) auto 0;
+  border-radius: 0;
+
+  > li > a {
+    padding: $pagination-padding-y $pagination-padding-x;
+    border-radius: 0;
+    background: $pagination-bg;
+    color: $pagination-color;
+    border: $pagination-border-width solid $pagination-border-color;
+
+    &:hover {
+      background: $pagination-hover-bg;
+      color: $pagination-hover-color;
+      text-decoration: none;
+    }
+  }
+
+  .active {
+    a,
+    a:link,
+    a:visited {
+      color: $pagination-active-color;
+      background: $pagination-active-bg;
+      border: $pagination-border-width solid $pagination-active-border-color;
+    }
+
+    a:hover {
+      text-decoration: none;
+      cursor: default;
+    }
+  }
+
+  .disabled {
+    a {
+      color: $pagination-disabled-color;
+      background: $pagination-disabled-bg;
+      border: $pagination-border-width solid $pagination-disabled-border-color;
+      text-decoration: none;
+      cursor: not-allowed;
+    }
+  }
+}

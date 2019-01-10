@@ -1,0 +1,12 @@
+.lo-progress-badges__badge {
+  margin: $spacer;
+  padding: 0 ($spacer / 2);
+
+  img {
+    margin-bottom: $spacer / 2;
+  }
+
+  .lo-progress-badges__name {
+    font-weight: bold;
+  }
+}

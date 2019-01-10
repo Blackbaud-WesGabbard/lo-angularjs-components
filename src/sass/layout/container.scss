@@ -1,8 +1,0 @@
-.container--fixed{
-  width: 100%;
-
-  @include media-breakpoint-up(md) {
-    width: calc(100% - 230px);
-    margin-left: 230px;
-  }
-}

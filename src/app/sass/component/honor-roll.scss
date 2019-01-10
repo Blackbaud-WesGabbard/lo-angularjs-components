@@ -1,0 +1,25 @@
+.lo-honor-roll {
+  max-width: 325px;
+  height: 215px;
+  overflow-y: scroll;
+  padding: $spacer;
+  background: $white;
+  border: 1px solid $border-color;
+
+  .lo-honor-roll__donor {
+    margin-bottom: $spacer;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    .lo-honor-roll__name {
+      flex-basis: 70%;
+    }
+
+    .lo-honor-roll__amount {
+      flex-basis: 25%;
+      text-align: right;
+    }
+  }
+}

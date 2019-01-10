@@ -1,0 +1,125 @@
+<div class="lo-roster-list lo-roster-list--{{type}}">
+  <div class="lo-roster-list__filter text-center" ng-if="includeSearch">
+    <div class="h6 lo-results-list__filter-label">
+      <span ng-bind="state.searchType"></span> Search:
+    </div>
+    <div ng-if="state.searchType == 'participant'">
+      <form ng-submit="findParticipants(false)" name="searchRoster" class="form-inline justify-content-center">
+        <label for="searchRosterFirstName" class="sr-only">
+          First Name
+        </label>
+        <div class="form-group">
+          <input type="text" class="form-control" id="searchRosterFirstName" ng-model="state.firstName" placeholder="First Name" />
+        </div>
+        <label for="searchRosterLastName" class="sr-only">
+          Last Name
+        </label>
+        <div class="input-group" ng-if="state.searchType == 'participant'">
+          <input type="text" class="form-control" id="searchRosterLastName" ng-model="state.lastName" placeholder="Last Name" />
+          <div class="input-group-append">
+            <button class="btn btn-sm btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div ng-if="state.searchType == 'team'">
+      <form ng-submit="findTeams(false)" name="searchRoster" class="form-inline justify-content-center">
+        <label for="searchRosterTeamName" class="sr-only">
+          Team Name
+        </label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="searchRosterTeamName" ng-model="state.teamName" placeholder="Team Name" />   
+          <div class="input-group-append">
+            <button class="btn btn-sm btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="lo-roster-list__results">
+    <div loading-indicator text="Fetching Results..." ng-if="state.isLoading"></div>
+    <div ng-if="!state.isLoading">
+      <div class="alert alert-danger" ng-if="state.errorMessage">
+        <span ng-bind="state.errorMessage"></span>
+      </div>
+      <div ng-if="!state.errorMessage">
+        <table class="table lo-table" ng-class="{'table-striped': tableStripe == 'true'}">
+          <caption class="sr-only">List of {{state.searchType}}s</caption>
+          <thead>
+            <tr>
+              <th class="text-left">
+                <div ng-if="state.totalResults < 2">
+                  <span>Name</span>
+                </div>
+                <button type="button" class="btn btn-link lo-table__sorting" ng-if="state.totalResults > 1" ng-class="{'active': state.sortColumn == 'name'}" ng-click="sortResults('name')">
+                  <span>Name</span>
+                  <i class="fa fa-chevron-down" ng-show="state.sortColumn != 'name' || (state.sortColumn == 'name' && !state.sortAscending)"></i>
+                  <i class="fa fa-chevron-up" ng-show="state.sortColumn == 'name' && state.sortAscending"></i>
+                </button>
+              </th>
+              <th class="text-center">
+                <div ng-if="state.totalResults < 2">
+                  <span>Amount</span>
+                </div>
+                <button type="button" class="btn btn-link lo-table__sorting" ng-if="state.totalResults > 1" ng-class="{'active': state.sortColumn == 'total'}" ng-click="sortResults('total')">
+                  <span>Amount</span>
+                  <i class="fa fa-chevron-down" ng-show="state.sortColumn != 'total' || (state.sortColumn == 'total' && !state.sortAscending)"></i>
+                  <i class="fa fa-chevron-up" ng-show="state.sortColumn == 'total' && state.sortAscending"></i>
+                </button>
+              </th>
+              <th>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="result in state.list">
+              <td class="text-left">
+                <div ng-if="type == 'teamParticipants' || type == 'companyParticipants'">
+                  <img ng-src="{{$root.path}}{{result.badges.participantMilestoneSmallBadgeUrl}}" ng-if="result.badges.participantMilestoneSmallBadgeUrl && showBadges" />
+                  <img ng-src="{{$root.path}}{{result.badges.personalDonationBadgeSmallUrl}}" ng-if="result.badges.personalDonationBadgeSmallUrl && showBadges" />
+                  <a ng-href="{{result.personalPageUrl}}">
+                    <span ng-bind="result.name.first"></span> <span ng-bind="result.name.last"></span>
+                  </a>
+                </div>
+                <div ng-if="type == 'companyTeams'">
+                  <img ng-src="{{$root.path}}{{result.badges.teamMilestoneBadgeSmallUrl}}" ng-if="result.badges.teamMilestoneBadgeSmallUrl && showBadges" />
+                  <a ng-href="{{result.teamPageURL}}">
+                    <span ng-bind="result.name"></span>
+                  </a>
+                </div>
+              </td>
+              <td class="text-center">
+                {{result.amountRaised / 100 | currency:"$":0}}
+              </td>
+              <td class="text-right lo-roster-list__cta">
+                <div ng-if="type == 'teamParticipants' || type == 'companyParticipants'">
+                  <a ng-href="{{result.donationUrl}}" class="btn btn-primary" ng-class="{'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}">
+                    Donate
+                  </a>
+                </div>
+                <div ng-if="type == 'companyTeams'">
+                  <a ng-href="{{result.teamDonateURL}}" class="btn btn-primary" ng-class="{'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}">
+                    Donate
+                  </a>
+                  <a ng-href="{{result.joinTeamURL}}" class="btn btn-primary lo-roster-list__cta--join" ng-class="{'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}">
+                    Join Team
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center" ng-if="state.totalResults > sizeLimit">
+          <ul uib-pagination ng-model="state.currentPage" ng-change="paginateResults()" total-items="state.totalResults" items-per-page="sizeLimit" max-size="2" boundary-link-numbers="true" previous-text="&#8249;" next-text="&#8250;"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
