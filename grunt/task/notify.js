@@ -11,7 +11,14 @@ module.exports = {
   "main": {
     options: {
       title: 'Luminate Online AngularJS Library',
-      message: 'Main files updated.'
+      message: 'Application files updated.'
+    }
+  },
+
+  "documentation": {
+    options: {
+      title: 'Luminate Online AngularJS Library',
+      message: 'Documentation files updated.'
     }
   }
 }

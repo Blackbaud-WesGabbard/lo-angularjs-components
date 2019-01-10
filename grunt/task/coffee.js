@@ -7,15 +7,27 @@ module.exports = {
 
   "main": {
     files: {
-      'dist/js/main.js': [
-        'src/coffee/init.coffee',
-        'src/coffee/config/*.*',
-        'src/coffee/service/*.*',
+      'dist/app/js/luminate-angularjs-library.js': [
+        'src/app/coffee/init.coffee',
+        'src/app/coffee/config/*.*',
+        'src/app/coffee/service/*.*',
+        'src/app/coffee/controller/*.*',
+        'src/app/coffee/filter/*.*',
+        'src/app/coffee/directive/*.*',
+        'src/app/coffee/**/*.*'
+      ]
+    }
+  },
+
+  "documentation": {
+    files: {
+      'dist/documentation/js/documentation.js': [
+        'src/documentation/coffee/init.coffee',
+        'src/documentation/coffee/config/*.*',
         'src/coffee/controller/*.*',
-        'src/coffee/filter/*.*',
-        'src/coffee/directive/*.*',
-        'src/coffee/**/*.*'
+        'src/documentation/coffee/**/*.*'
       ]
     }
   }
+
 }

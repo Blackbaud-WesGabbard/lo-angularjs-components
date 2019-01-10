@@ -1,23 +1,26 @@
 {
-  "name": "luminate-ng-library",
+  "name": "luminate-angularjs-library",
   "description": "The AngularJS component library used for Luminate Online Services Projects.",
   "version": "1.0.0",
   "repository": [
     {
       "type": "git",
-      "url": "https://github.com/Blackbaud-WesGabbard/luminate-ng-library"
+      "url": "https://github.com/convio/luminate-angularjs-library"
     }
   ],
   "engines": {
-    "node": "^6.14.4"
+    "node": "^8.15.0"
   },
   "dependencies": {
     "grunt": "^1.0.3",
     "grunt-cli": "^1.3.1",
-    "load-grunt-tasks": "^4.0.0"
+    "jquery": "^3.3.1",
+    "load-grunt-tasks": "^4.0.0",
+    "popper.js": "^1.14.4"
   },
   "devDependencies": {
     "angular-luminate-utils": "^0.7.1",
+    "angular-ui-bootstrap": "^2.5.6",
     "autoprefixer": "^9.1.5",
     "bootstrap": "^4.1.3",
     "glob": "^7.1.3",
@@ -25,6 +28,7 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-connect": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-htmlmin": "^3.0.0",
     "grunt-contrib-jshint": "^2.0.0",
@@ -33,8 +37,8 @@
     "grunt-minjson": "^0.4.0",
     "grunt-notify": "^0.4.5",
     "grunt-postcss": "^0.9.0",
-    "grunt-sass": "^2.1.0",
-    "node-sass": "^4.9.3",
+    "grunt-sass": "^3.0.2",
+    "node-sass": "^4.11.0",
     "time-grunt": "^1.4.0"
   }
 }

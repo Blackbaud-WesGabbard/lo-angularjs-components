@@ -18,11 +18,24 @@ module.exports = {
     files: [
       {
         expand: true,
-        cwd: 'dist/css/',
+        cwd: 'dist/app/css/',
         src: [
           'main.css'
         ],
-        dest: 'dist/css/'
+        dest: 'dist/app/css/'
+      }
+    ]
+  },
+
+  "documentation": {
+    files: [
+      {
+        expand: true,
+        cwd: 'dist/documentation/css/',
+        src: [
+          'main.css'
+        ],
+        dest: 'dist/documentation/css/'
       }
     ]
   }

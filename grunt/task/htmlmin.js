@@ -15,12 +15,25 @@ module.exports = {
   "main": {
     files: [
       {
-        cwd: 'src/html/',
+        cwd: 'src/app/html/',
         expand: true,
         src: [
           '**/*.html'
         ],
-        dest: 'dist/html/'
+        dest: 'dist/app/html/'
+      }
+    ]
+  },
+
+  "documentation": {
+    files: [
+      {
+        cwd: 'src/documentation/html/',
+        expand: true,
+        src: [
+          '**/*.html'
+        ],
+        dest: 'dist/documentation/html/'
       }
     ]
   }

@@ -17,10 +17,10 @@ module.exports = {
 
   "main": {
     files: [
-      'src/html/**/*',
-      'src/sass/**/*',
-      'src/sass/main.scss',
-      'src/coffee/**/*'
+      'src/app/html/**/*',
+      'src/app/sass/**/*',
+      'src/app/sass/main.scss',
+      'src/app/coffee/**/*'
     ],
     tasks: [
       'clean:main',
@@ -28,6 +28,22 @@ module.exports = {
       'js-dist:main',
       'html-dist:main',
       'notify:main'
+    ]
+  },
+
+  "documentation": {
+    files: [
+      'src/documentation/html/**/*',
+      'src/documentation/coffee/**/*',
+      'src/documentation/sass/**/*',
+      'src/documentation/sass/main.scss'
+    ],
+    tasks: [
+      'clean:documentation',
+      'css-dist:documentation',
+      'js-dist:documentation',
+      'html-dist:documentation',
+      'notify:documentation'
     ]
   }
 }

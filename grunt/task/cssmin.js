@@ -8,8 +8,16 @@ module.exports = {
   "main": {
     files: [
       {
-        src: 'dist/css/main.css',
-        dest: 'dist/css/main.min.css'
+        src: 'dist/app/css/luminate-angularjs-library.css',
+        dest: 'dist/app/css/luminate-angularjs-library.min.css'
+      }
+    ]
+  },
+  "documentation": {
+    files: [
+      {
+        src: 'dist/documentation/css/main.css',
+        dest: 'dist/documentation/css/main.min.css'
       }
     ]
   }

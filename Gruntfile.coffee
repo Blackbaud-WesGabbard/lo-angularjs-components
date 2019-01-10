@@ -43,10 +43,6 @@ module.exports = (grunt) ->
       'uglify'
     ], taskTarget
     return
-  grunt.registerTask 'json-dist', (taskTarget) ->
-    runTargetedTask [
-      'minjson'
-    ], taskTarget
   grunt.registerTask 'html-dist', (taskTarget) ->
     runTargetedTask [
       'htmlmin'
@@ -63,15 +59,27 @@ module.exports = (grunt) ->
       'uglify'
       'htmlmin'
     ], 'main'
+    runTargetedTask [
+      'checkDependencies'
+      'clean'
+      'coffee'
+      'uglify'
+      'htmlmin'
+    ], 'documentation'
     return
   grunt.registerTask 'dev', ->
     devTasks = [
-      'checkDependencies:dev'
-      'connect:dev'
+      'checkDependencies:dev',
+      'copy:ng-utils',
+      'copy:ng-bootstrap'
     ]
     config.watch['main'].tasks.forEach (task) ->
       if task.indexOf('notify:') is -1
         devTasks.push task
+    config.watch['documentation'].tasks.forEach (task) ->
+      if task.indexOf('notify:') is -1
+        devTasks.push task
+    devTasks.push 'connect:dev'
     devTasks.push 'watch'
     grunt.task.run devTasks
     return

@@ -5,9 +5,20 @@ module.exports = {
     files: [
       {
         src: [
-          'dist/js/main.js'
+          'dist/app/js/luminate-angularjs-library.js'
         ],
-        dest: 'dist/js/main.min.js'
+        dest: 'dist/app/js/luminate-angularjs-library.min.js'
+      }
+    ]
+  },
+
+  "documentation": {
+    files: [
+      {
+        src: [
+          'dist/documentation/js/documentation.js'
+        ],
+        dest: 'dist/documentation/js/documentation.min.js'
       }
     ]
   }
