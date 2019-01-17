@@ -1,0 +1,125 @@
+<div class="lo-team-list-search">
+  <div class="lo-team-list-search__filter">
+    <div class="row">
+      <div class="col-sm-6">
+        <form ng-submit="findTeams(false)" name="searchByTeamName">
+          <label for="searchTeamName">
+            Search By Team
+          </label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="searchTeamName" ng-model="state.teamName" ng-keyup="state.firstName = ''; state.lastNam = ''" placeholder="Team Name" />
+            <div class="input-group-append">
+              <button class="btn btn-sm btn-primary">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div ng-if="captainSearch" class="col-sm-6">
+        <form ng-submit="findTeams(false)" name="searchByCaptain">
+          <label for="searchCaptainFirstName">
+            Search By Team Captain <span class="sr-only">First Name</span>
+          </label>
+          <div class="form-group">
+            <input type="text" class="form-control" id="searchCaptainFirstName" ng-model="state.firstName" ng-keyup="state.teamName = '';" placeholder="First Name" />
+          </div>
+          <div class="form-group">
+            <label for="searchCaptainLastName" class="sr-only">
+              Last Name
+            </label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="searchCaptainLastName" ng-model="state.lastName" ng-keyup="state.teamName = '';" placeholder="Last Name" />
+              <div class="input-group-append">
+                <button class="btn btn-sm btn-primary">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="lo-team-list-search__results">
+    <div loading-indicator text="Fetching Results..." ng-if="state.isLoading"></div>
+    <div ng-if="!state.isLoading">
+      <div class="alert alert-danger" ng-if="state.errorMessage">
+        <span ng-bind="state.errorMessage"></span>
+      </div>
+      <div ng-if="!state.errorMessage">
+        <table class="table lo-table" ng-class="{'table-striped': tableStripe == 'true'}">
+          <caption class="sr-only">List of Teams</caption>
+          <thead>
+            <tr>
+              <th class="text-left">
+                <div ng-if="state.totalResults < 2">
+                  <span>Name</span>
+                </div>
+                <button type="button" class="btn btn-link lo-table__sorting" ng-if="state.totalResults > 1" ng-class="{'active': state.sortColumn == 'name'}" ng-click="sortResults('name')">
+                  <span>Name</span>
+                  <i class="fa fa-chevron-down" ng-show="state.sortColumn != 'name' || (state.sortColumn == 'name' && !state.sortAscending)"></i>
+                  <i class="fa fa-chevron-up" ng-show="state.sortColumn == 'name' && state.sortAscending"></i>
+                </button>
+              </th>
+              <th>
+                <div ng-if="state.totalResults < 2">
+                  <span>Captain</span>
+                </div>
+                <button type="button" class="btn btn-link lo-table__sorting" ng-if="state.totalResults > 1" ng-class="{'active': state.sortColumn == 'last_name'}" ng-click="sortResults('last_name')">
+                  <span>Captain</span>
+                  <i class="fa fa-chevron-down" ng-show="state.sortColumn != 'last_name' || (state.sortColumn == 'last_name' && !state.sortAscending)"></i>
+                  <i class="fa fa-chevron-up" ng-show="state.sortColumn == 'last_name' && state.sortAscending"></i>
+                </button>
+              </th>
+              <th>
+                <div ng-if="state.totalResults < 2">
+                  <span>Company</span>
+                </div>
+                <button type="button" class="btn btn-link lo-table__sorting" ng-if="state.totalResults > 1" ng-class="{'active': state.sortColumn == 'company_name'}" ng-click="sortResults('company_name')">
+                  <span>Company</span>
+                  <i class="fa fa-chevron-down" ng-show="state.sortColumn != 'company_name' || (state.sortColumn == 'company_name' && !state.sortAscending)"></i>
+                  <i class="fa fa-chevron-up" ng-show="state.sortColumn == 'company_name' && state.sortAscending"></i>
+                </button>
+              </th>
+              <th>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="result in state.list">
+              <td class="text-left">
+                <div>
+                  <img ng-src="{{$root.path}}{{result.badges.teamMilestoneBadgeSmallUrl}}" ng-if="result.badges.teamMilestoneBadgeSmallUrl && showBadges" />
+                  <a ng-href="{{result.teamPageURL}}">
+                    <span ng-bind="result.name"></span>
+                  </a>
+                </div>
+              </td>
+              <td>
+                <span ng-bind="result.captainFirstName"></span> <span ng-bind="result.captainLastName"></span>
+              </td>
+              <td>
+                <span ng-if="result.companyName" ng-bind="result.companyName"></span>
+              </td>
+              <td class="text-right lo-roster-list__cta">
+                <a ng-href="{{result.joinTeamURL}}" class="btn btn-primary lo-roster-list__cta--join" ng-class="{'btn-lg': buttonSize == 'lg', 'btn-sm': buttonSize == 'sm'}">
+                  Join Team
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+          <button ng-show="state.list.length < state.totalResults && !pagination" class="btn btn-outline-primary btn-lg" type="button" ng-click="viewAll(true)">
+            View More <i class="fa fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <ul uib-pagination ng-show="pagination && state.totalResults > sizeLimit" ng-model="state.currentPage" ng-change="paginateResults()" total-items="state.totalResults" items-per-page="sizeLimit" max-size="2" boundary-link-numbers="true" previous-text="&#8249;" next-text="&#8250;"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

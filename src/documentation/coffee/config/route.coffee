@@ -26,6 +26,8 @@ angular.module 'ngLuminateDocumentation'
         templateUrl: DOC_INFO.rootPath + 'html/view/progress-meters.html'
       .when '/rosterList',
         templateUrl: DOC_INFO.rootPath + 'html/view/roster-list.html'
+      .when '/teamListSearch',
+        templateUrl: DOC_INFO.rootPath + 'html/view/team-list-search.html'
       .when '/topList',
         templateUrl: DOC_INFO.rootPath + 'html/view/top-list.html'
 

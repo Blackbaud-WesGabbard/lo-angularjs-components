@@ -1,9 +1,23 @@
 .lo-login-form {
-  &.form-inline {
+  .form-inline {
     margin: ($spacer / 2) auto;
 
     .form-group {
-      margin-right: $spacer / 4;
+      margin-right: $spacer / 2;
+    }
+  }
+
+  &.lo-login-form--horizontal {
+    .lo-login-form__fields {
+      .form-group:first-child {
+        margin-right: $spacer;
+      }
+    }
+  }
+
+  .form-group.custom-checkbox {
+    label {
+      margin-bottom: 0px;
     }
   }
 }

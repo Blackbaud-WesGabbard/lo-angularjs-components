@@ -1,22 +1,95 @@
 <div>
-  <form class="lo-login-form" ng-class="{'form-inline': layout == 'horizontal'}" name="loginForm" ng-submit="loginUser()" novalidate ng-cloak>
-    <div class="form-group" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_user_name.$invalid}">
-      <label for="loginForm-username" ng-class="{'sr-only': showLables == 'false'}">
-        Username
-      </label>
-      <input type="text" id="loginForm-username" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_user_name" required="true" placeholder="username" ng-model="loginUser.user_name" />
-    </div>
-    <div class="form-group" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_password.$invalid}">
-      <label for="existingUser-password" ng-class="{'sr-only': showLables == 'false'}">
-        Password
-      </label>
-      <input type="password" id="loginForm-password" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_password" required="true" placeholder="password" ng-model="loginUser.password" />
-    </div>
-    <button type="submit" class="btn btn-primary" ng-class="{'btn-lg': formSize == 'lg', 'btn-sm': formSize == 'sm'}">
-      Sign In
-    </button>
-  </form>
-  <div class="alert alert-danger" ng-show="state.errorMsg">
+  <div class="alert alert-danger" ng-show="state.errorMsg && layout != 'inline'">
     <span ng-bind="state.errorMsg"></span>
+  </div>
+  <div class="alert alert-success" ng-show="state.successMsg && layout != 'inline'">
+    <span ng-bind="state.successMsg"></span>
+  </div>
+  <form class="lo-login-form lo-login-form--{{layout}}" name="loginForm" ng-submit="loginUser()" novalidate ng-cloak>
+    <div class="form-inline lo-login-form__fields" ng-if="layout == 'inline'">
+      <div class="form-group" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_user_name.$invalid}">
+        <label for="loginForm-username-{{randomNumber}}" ng-class="{'sr-only': showLables == 'false'}">
+          Username
+        </label>
+        <input type="text" id="loginForm-username-{{randomNumber}}" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_user_name" required="true" placeholder="username" ng-model="loginUser.user_name" />
+      </div>
+      <div class="form-group" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_password.$invalid}">
+        <label for="existingUser-password-{{randomNumber}}" ng-class="{'sr-only': showLables == 'false'}">
+          Password
+        </label>
+        <input type="password" id="loginForm-password-{{randomNumber}}" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_password" required="true" placeholder="password" ng-model="loginUser.password" />
+      </div>
+      <button type="submit" class="btn btn-primary" ng-class="{'btn-lg': formSize == 'lg', 'btn-sm': formSize == 'sm'}">
+        <span ng-bind="buttonText"></span>
+      </button>
+    </div>
+
+    <div ng-if="layout != 'inline'" class="lo-login-form__fields">
+      <div class="form-row" ng-if="layout == 'horizontal'">
+        <div class="form-group col" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_user_name.$invalid}">
+          <label for="loginForm-username-{{randomNumber}}" ng-class="{'sr-only': showLables == 'false'}">
+            Username
+          </label>
+          <input type="text" id="loginForm-username-{{randomNumber}}" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_user_name" required="true" placeholder="username" ng-model="loginUser.user_name" />
+        </div>
+        <div class="form-group col" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_password.$invalid}">
+          <label for="existingUser-password-{{randomNumber}}" ng-class="{'sr-only': showLables == 'false'}">
+            Password
+          </label>
+          <input type="password" id="loginForm-password-{{randomNumber}}" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_password" required="true" placeholder="password" ng-model="loginUser.password" />
+        </div>
+      </div>
+
+      <div class="form-row" ng-if="layout != 'horizontal'">
+        <div class="col">
+          <div class="form-group" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_user_name.$invalid}">
+            <label for="loginForm-username-{{randomNumber}}" ng-class="{'sr-only': showLables == 'false'}">
+              Username
+            </label>
+            <input type="text" id="loginForm-username-{{randomNumber}}" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_user_name" required="true" placeholder="username" ng-model="loginUser.user_name" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" ng-if="layout != 'horizontal'">
+        <div class="col">
+          <div class="form-group" ng-class="{'has-error': uTypeLogin.$submitted && uTypeLogin.existing_password.$invalid}">
+            <label for="existingUser-password-{{randomNumber}}" ng-class="{'sr-only': showLables == 'false'}">
+              Password
+            </label>
+            <input type="password" id="loginForm-password-{{randomNumber}}" class="form-control" ng-class="{'form-control-lg': formSize == 'lg', 'form-control-sm': formSize == 'sm'}" name="existing_password" required="true" placeholder="password" ng-model="loginUser.password" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row" ng-if="rememberMe">
+      <div class="form-group custom-checkbox col">
+        <input type="checkbox" name="remember_me" id="loginForm-rememberMe-{{randomNumber}}" ng-model="loginUser['remember_me']" ng-true-value="'true'" ng-false-value="'false'" ng-checked="loginUser['remember_me'] == 'true'">
+        <label class="control-label" for="existingUser-remember">
+          Remember Me
+        </label>
+      </div>
+    </div>
+
+    <div class="form-row" ng-if="passwordResetEmail">
+      <div class="form-group col">
+        <div password-reset email="{{passwordResetEmail}}"></div>
+      </div>
+    </div>
+
+    <div class="form-row" ng-if="layout != 'inline'">
+      <div class="col">
+        <button type="submit" class="btn btn-primary" ng-class="{'btn-lg': formSize == 'lg', 'btn-sm': formSize == 'sm'}">
+          <span ng-bind="buttonText"></span>
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="alert alert-danger" ng-show="state.errorMsg && layout == 'inline'">
+    <span ng-bind="state.errorMsg"></span>
+  </div>
+  <div class="alert alert-success" ng-show="state.successMsg && layout == 'inline'">
+    <span ng-bind="state.successMsg"></span>
   </div>
 </div>

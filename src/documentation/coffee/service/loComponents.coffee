@@ -76,6 +76,20 @@ angular.module 'ngLuminateDocumentation'
             formSize:
               format: 'string'
               description: 'Override size of form elements and submit button. Can be set to sm or lg.'
+            buttonText:
+              format: 'string'
+              description: 'Can set the text of the button.'
+            passwordResetEmail:
+              format: 'string'
+              description: 'Not included by default. Atext button that will submit passwordReset directive.'
+            rememberMe:
+              format: 'boolean'
+              description: 'Defaults to false, can be set to inlcude remember me checkbox to login.'
+            loginResponse:
+              format: 'object'
+              description: 'Object properties returned from Login Response API request. Can be retrieved in parent controller with:
+              <br />
+              <code>$scope.$on "loginResponse", (event, response) -></code>'
 
           loadingIndicator:
             size:
@@ -175,6 +189,32 @@ angular.module 'ngLuminateDocumentation'
               format: 'boolean'
               description: 'Optional. Set to true for striped table results.'
 
+          teamListSearch:
+            frId:
+              format: 'string'
+              description: 'TeamRaiser id is optional if embedded in TeamRaiser, otherwise required.'
+            buttonSize:
+              format: 'string'
+              description: 'Optional. Can set the size size of buttons to "sm" or "lg"'
+            captainSearch:
+              format: 'boolean'
+              description: 'Defaults to false, set to include search by team captain name.'
+            pagination:
+              format: 'boolean'
+              description: 'Defaults to false and show View All button which will return all Teams for event. Otherwise, if pagaintion set to true will hide button and shpow pagination.'
+            sizeLimit:
+              format: 'string'
+              description: 'Optional. Set the size of the list. By default set at 25, has a max of 500.'
+            sortAscending:
+              format: 'string'
+              description: 'Optional. By default set to true.'
+            sortColumn:
+              format: 'string'
+              description: 'Optional. Defaults to "name" (team name), can be overridden by setting to "last_name" to sort by team captain or "company".'
+            tableStripe:
+              format: 'boolean'
+              description: 'Optional. Set to true for striped table results.'
+
           topList:
             frId:
               format: 'string or object'
@@ -182,11 +222,6 @@ angular.module 'ngLuminateDocumentation'
             type:
               format: 'string'
               description: 'Optional if using listData atribute. Otherwise must be set to either participant, team, or company.'
-            ###
-            id:
-              format: 'string or object'
-              description: 'Optional. By default will fetch based on TeamRaiser Event. However can pass Team id or Company id to change list.'
-            ###
             sizeLimit:
               format: 'string'
               description: 'Optional. Set the size of the list. By default set at 25, has a max of 500.'

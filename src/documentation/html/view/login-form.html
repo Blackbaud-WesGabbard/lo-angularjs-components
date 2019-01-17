@@ -4,13 +4,13 @@
 <div class="documentation__examples">
   <h3>Examples</h3>
   <div class="documentation__example">
-    <p>Horizontal login form with hidden labels and set to small elements.</p>
+    <p>Horizontal login form with password reset and remember me.</p>
     <code>
-      &lt;div login-form layout="horizontal" show-lables="false" form-size="sm"&gt;&lt;/div&gt;
+      &lt;div login-form layout="horizontal" password-reset-email="wes.gabbard@blackbaud.com" remember-me="true"&gt;&lt;/div&gt;
     </code>
     <div class="row">
       <div class="col-sm-6">
-        <div login-form layout="horizontal" show-lables="false" form-size="sm"></div>
+        <div login-form layout="horizontal" show-lables="false"  password-reset-email="wes.gabbard@blackbaud.com" remember-me="true"></div>
       </div>
     </div>
   </div>
@@ -20,8 +20,20 @@
       &lt;div login-form&gt;&lt;/div&gt;
     </code>
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-6">
         <div login-form></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="documentation__example">
+    <p>Inline login form.</p>
+    <code>
+      &lt;div login-form layout="inline" show-lables="false" form-size="sm"&gt;&lt;/div&gt;
+    </code>
+    <div class="row">
+      <div class="col-sm-6">
+        <div login-form layout="inline" show-lables="false" form-size="sm"></div>
       </div>
     </div>
   </div>

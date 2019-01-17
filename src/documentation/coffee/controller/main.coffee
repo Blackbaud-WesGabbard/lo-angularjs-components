@@ -48,11 +48,16 @@ angular.module 'documentationControllers'
 
       $rootScope.components = loComponentsService.getComponents()
 
+      #listen for emitted objects out of directives
       $scope.$on 'selectedParticipationType', (event, type) ->
         $scope.selectedParticipationType = type
 
       $scope.$on 'selectedDonationLevel', (event, level) ->
         $scope.selectedDonationLevel = level
+
+      $scope.$on 'loginResponse', (event, info) ->
+        console.log info
+        $scope.loggedInConstituent = info
 
       #example of setting object to pass into topList directive
       TeamraiserParticipantService.getParticipants '&first_name=' + encodeURIComponent('%%') + '&last_name=' + encodeURIComponent('%') + '&list_sort_column=total&list_ascending=false&list_page_size=&fr_id=' + $scope.ctrl.frId

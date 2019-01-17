@@ -1,0 +1,21 @@
+.lo-team-list-search__filter {
+	margin-bottom: $spacer * 2;
+
+	.form-group {
+		margin-right: $spacer / 2;
+	}
+
+  .col-sm-6:first-child {
+    margin-bottom: $spacer;
+
+    @include media-breakpoint-up(sm) {
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.lo-team-list-search__results {
+	td a {
+		vertical-align: middle;
+	}
+}
